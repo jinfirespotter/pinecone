@@ -3,6 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.firespotter.jinwroh.pinecone" >
 
+    <uses-permission
+        android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/grass"

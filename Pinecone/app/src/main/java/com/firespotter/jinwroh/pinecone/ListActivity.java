@@ -60,8 +60,19 @@ public class ListActivity extends Activity {
             startActivity(intent);
         } else if (id == R.id.action_picture) {
             System.out.println("!");
+            this.dispatchTakePictureIntent();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 }
