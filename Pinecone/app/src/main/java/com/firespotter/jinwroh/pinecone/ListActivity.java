@@ -56,7 +56,8 @@ public class ListActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
         } else if (id == R.id.action_picture) {
             System.out.println("!");
         }
