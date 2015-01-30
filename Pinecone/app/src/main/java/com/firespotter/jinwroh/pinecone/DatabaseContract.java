@@ -25,14 +25,15 @@ public final class DatabaseContract {
 
         private photo() {}
 
-        public static final String CREATE_TABLE = "CREATE TABLE AUTOINCREMENT " + TABLE_NAME + " ("
-                + _ID + " INTEGER PRIMARY KEY " + COMMA_SEPARATOR
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
+                + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT " + COMMA_SEPARATOR
                 + KEY_FILEPATH + TEXT_TYPE
                 + ");";
 
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         public static final String[] KEY_ARRAY = {
+                _ID,
                 KEY_FILEPATH
         };
     }
@@ -62,6 +63,7 @@ public final class DatabaseContract {
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         public static final String[] KEY_ARRAY = {
+                _ID,
                 KEY_PHOTO_ID,
                 KEY_NAME,
                 KEY_EMAIL,
