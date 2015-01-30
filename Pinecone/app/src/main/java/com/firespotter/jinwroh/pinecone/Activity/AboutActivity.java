@@ -1,21 +1,23 @@
-package com.firespotter.jinwroh.pinecone;
+package com.firespotter.jinwroh.pinecone.Activity;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.googlecode.tesseract.android.TessBaseAPI;
+import com.firespotter.jinwroh.pinecone.NavDrawerItem;
+import com.firespotter.jinwroh.pinecone.NavDrawerListAdapter;
+import com.firespotter.jinwroh.pinecone.Photo;
+import com.firespotter.jinwroh.pinecone.PhotoDataSource;
+import com.firespotter.jinwroh.pinecone.R;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,15 +29,11 @@ public class AboutActivity extends Activity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    // nav drawer title
     private CharSequence mDrawerTitle;
-
-    // used to store app title
     private CharSequence mTitle;
 
-    // slide menu items
     private String[] navMenuTitles;
-    //private TypedArray navMenuIcons;
+    private TypedArray navMenuIcons;
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
@@ -47,24 +45,23 @@ public class AboutActivity extends Activity {
 
         mTitle = mDrawerTitle = getTitle();
 
-        // load slide menu items
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
 
-        // nav drawer icons from resources
-        //navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
-
+        int counter = 0;
         for (String title : navMenuTitles) {
-            navDrawerItems.add(new NavDrawerItem(title));
+            navDrawerItems.add(new NavDrawerItem(title, navMenuIcons.getResourceId(counter, -1)));
+            counter++;
         }
 
         // Recycle the typed array
-        //navMenuIcons.recycle();
+        navMenuIcons.recycle();
 
         // setting the nav drawer list adapter
         adapter = new NavDrawerListAdapter(getApplicationContext(),
@@ -77,6 +74,7 @@ public class AboutActivity extends Activity {
 
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
+                R.drawable.ic_drawer,
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
         ) {
@@ -94,17 +92,12 @@ public class AboutActivity extends Activity {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (savedInstanceState == null) {
-            // on first time display view for first nav item
-            displayView(0);
-        }
-
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
     }
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu){
-        getMenuInflater().inflate(R.menu.menu_about, menu);
+        getMenuInflater().inflate(R.menu.menu_list, menu);
         return true;
     }
 
@@ -115,12 +108,9 @@ public class AboutActivity extends Activity {
             return true;
         }
         // Handle action bar actions click
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-            default:
+
                 return super.onOptionsItemSelected(item);
-        }
+
     }
 
     public void databasestuff() {
@@ -153,7 +143,6 @@ public class AboutActivity extends Activity {
     public boolean onPrepareOptionsMenu (Menu menu){
         // if nav drawer is opened, hide the action items
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -198,13 +187,22 @@ public class AboutActivity extends Activity {
 
     private void displayView(int position) {
 
-        System.out.println(position);
+        Intent intent = null;
+        switch (position) {
+            case 0:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+            case 1:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+            case 2:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+            default:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+        }
 
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        mDrawerList.setSelection(position);
-        setTitle(navMenuTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
-
+        startActivity(intent);
     }
 }

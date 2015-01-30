@@ -1,0 +1,153 @@
+package com.firespotter.jinwroh.pinecone.Activity;
+
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import com.firespotter.jinwroh.pinecone.NavDrawerItem;
+import com.firespotter.jinwroh.pinecone.NavDrawerListAdapter;
+import com.firespotter.jinwroh.pinecone.R;
+
+import java.util.ArrayList;
+
+/**
+ * Created by jinroh on 1/30/15.
+ */
+public class BaseDrawerActivity extends BaseActivity {
+
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+
+    private String[] navMenuTitles;
+    private TypedArray navMenuIcons;
+
+    private ArrayList<NavDrawerItem> navDrawerItems;
+    private NavDrawerListAdapter adapter;
+
+
+    public void initialiseDrawer() {
+        mTitle = mDrawerTitle = getTitle();
+
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.list_slidermenu1);
+
+        navDrawerItems = new ArrayList<NavDrawerItem>();
+
+        int counter = 0;
+        for (String title : navMenuTitles) {
+            navDrawerItems.add(new NavDrawerItem(title, navMenuIcons.getResourceId(counter, -1)));
+            counter++;
+        }
+
+        navMenuIcons.recycle();
+
+        adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
+        mDrawerList.setAdapter(adapter);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout,
+                R.drawable.ic_drawer,
+                R.string.app_name, // nav drawer open - description for accessibility
+                R.string.app_name // nav drawer close - description for accessibility
+        ) {
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu();
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu){
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    @Override
+    public void setTitle (CharSequence title){
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
+    }
+
+
+    @Override
+    protected void onPostCreate (Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+
+    @Override
+    public void onConfigurationChanged (Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    private class SlideMenuClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            displayView(position);
+        }
+    }
+
+    private void displayView(int position) {
+
+        Intent intent = null;
+        switch (position) {
+            case 0:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+            case 1:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+            case 2:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+            default:
+                intent = new Intent(this, AboutActivity.class);
+                break;
+        }
+
+        startActivity(intent);
+    }
+
+}
