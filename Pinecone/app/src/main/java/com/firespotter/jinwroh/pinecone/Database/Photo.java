@@ -1,4 +1,4 @@
-package com.firespotter.jinwroh.pinecone;
+package com.firespotter.jinwroh.pinecone.Database;
 
 /**
  * Created by jinroh on 1/28/15.

@@ -1,4 +1,4 @@
-package com.firespotter.jinwroh.pinecone;
+package com.firespotter.jinwroh.pinecone.Database;
 
 /**
  * Created by jinroh on 1/28/15.
@@ -12,11 +12,18 @@ public class Contact {
     private String phoneNumber;
     private String company;
     private String position;
+    private String notes;
+
+    public Contact() {};
 
     public Contact(long id, long photoId) {
         this.id = id;
         this.photoId = photoId;
     }
+
+    public long getId() {return this.id; }
+
+    public void setId(long id) { this.id = id; }
 
     public long getPhotoId() {
         return photoId;
@@ -65,4 +72,8 @@ public class Contact {
     public void setPosition(String position) {
         this.position = position;
     }
+
+    public String getNotes() { return notes; }
+
+    public void setNotes(String notes) { this.notes = notes; }
 }

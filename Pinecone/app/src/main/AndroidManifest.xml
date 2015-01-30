@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name=".Activity.EditActivity"
-            android:label="@string/title_activity_edit" >
+            android:label="@string/title_activity_edit"
+            android:theme="@style/MyTheme" >
         </activity>
     </application>
 

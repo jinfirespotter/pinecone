@@ -15,8 +15,8 @@ import android.widget.ListView;
 
 import com.firespotter.jinwroh.pinecone.NavDrawerItem;
 import com.firespotter.jinwroh.pinecone.NavDrawerListAdapter;
-import com.firespotter.jinwroh.pinecone.Photo;
-import com.firespotter.jinwroh.pinecone.PhotoDataSource;
+import com.firespotter.jinwroh.pinecone.Database.Photo;
+import com.firespotter.jinwroh.pinecone.Database.PhotoDataSource;
 import com.firespotter.jinwroh.pinecone.R;
 
 import java.sql.SQLException;

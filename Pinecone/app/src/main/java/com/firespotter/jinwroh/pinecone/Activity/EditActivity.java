@@ -1,6 +1,7 @@
 package com.firespotter.jinwroh.pinecone.Activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -12,7 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.firespotter.jinwroh.pinecone.Database.ContactDataSource;
+import com.firespotter.jinwroh.pinecone.Database.PhotoDataSource;
 import com.firespotter.jinwroh.pinecone.R;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
@@ -23,8 +27,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 public class EditActivity extends Activity {
+
+    private String filepath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +39,7 @@ public class EditActivity extends Activity {
         setContentView(R.layout.activity_edit);
 
         Intent intent = getIntent();
-        String filepath = intent.getStringExtra(HomeActivity.EXTRA_MESSAGE);
+        this.filepath = intent.getStringExtra(HomeActivity.EXTRA_MESSAGE);
         File file = new File(filepath);
         Bitmap photo = null;
         try {
@@ -48,7 +55,6 @@ public class EditActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.menu_list, menu);
         return true;
     }
@@ -68,9 +74,28 @@ public class EditActivity extends Activity {
 
     public void scanImage(View view) {
         testTess();
+
     }
 
     public void save(View view) {
+
+        PhotoDataSource photoDataSource = new PhotoDataSource(this);
+        ContactDataSource contactDataSource = new ContactDataSource(this);
+
+        try {
+            photoDataSource.open();
+            contactDataSource.open();
+
+            long photoId = photoDataSource.createPhoto(filepath);
+            contactDataSource.createContact(photoId, "", "", "", "", "", "NOTES");
+
+            photoDataSource.close();
+            contactDataSource.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
@@ -137,6 +162,13 @@ public class EditActivity extends Activity {
             baseAPI.setImage(b);
             String recognizedText = baseAPI.getUTF8Text();
             System.out.println(recognizedText);
+
+            Context context = getApplicationContext();
+            //CharSequence text = "Hello toast!";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, recognizedText, duration);
+            toast.show();
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();

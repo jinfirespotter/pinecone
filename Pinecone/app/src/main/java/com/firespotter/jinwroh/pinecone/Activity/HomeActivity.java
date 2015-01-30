@@ -144,7 +144,6 @@ public class HomeActivity extends PhotoActivity {
     }
 
 
-
     public void initializeDrawer(Bundle savedInstanceState) {
         mTitle = mDrawerTitle = getTitle();
 
@@ -246,6 +245,5 @@ public class HomeActivity extends PhotoActivity {
         }
 
         startActivity(intent);
-
     }
 }

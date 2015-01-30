@@ -1,9 +1,13 @@
-package com.firespotter.jinwroh.pinecone;
+package com.firespotter.jinwroh.pinecone.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.firespotter.jinwroh.pinecone.Database.DatabaseContract;
+import com.firespotter.jinwroh.pinecone.Database.DatabaseHelper;
+import com.firespotter.jinwroh.pinecone.Database.Photo;
 
 import java.sql.SQLException;
 

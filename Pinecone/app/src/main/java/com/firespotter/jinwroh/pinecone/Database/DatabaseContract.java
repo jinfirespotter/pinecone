@@ -1,4 +1,4 @@
-package com.firespotter.jinwroh.pinecone;
+package com.firespotter.jinwroh.pinecone.Database;
 
 import android.provider.BaseColumns;
 
@@ -47,6 +47,7 @@ public final class DatabaseContract {
         public static final String KEY_PHONE_NUMBER = "phone_number";
         public static final String KEY_COMPANY = "company";
         public static final String KEY_POSITION = "position";
+        public static final String KEY_NOTES = "notes";
 
         private contact() {}
 
@@ -57,7 +58,8 @@ public final class DatabaseContract {
                 + KEY_EMAIL + TEXT_TYPE + COMMA_SEPARATOR
                 + KEY_PHONE_NUMBER + TEXT_TYPE + COMMA_SEPARATOR
                 + KEY_COMPANY + TEXT_TYPE + COMMA_SEPARATOR
-                + KEY_POSITION + TEXT_TYPE
+                + KEY_POSITION + TEXT_TYPE + COMMA_SEPARATOR
+                + KEY_NOTES + TEXT_TYPE
                 + ");";
 
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
@@ -69,7 +71,8 @@ public final class DatabaseContract {
                 KEY_EMAIL,
                 KEY_PHONE_NUMBER,
                 KEY_COMPANY,
-                KEY_POSITION
+                KEY_POSITION,
+                KEY_NOTES
         };
     }
 }
