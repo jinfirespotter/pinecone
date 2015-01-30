@@ -3,9 +3,9 @@
     <color name="red">#ff0000</color>
     <color name="green">#00ff00</color>
     <color name="blue">#0000ff</color>
-    <color name="list_divider">#0000ff</color>
-    <color name="list_background">#FFFFFF</color>
-    <color name="list_background1">#074920</color>
-    <color name="list_background_pressed">#837432</color>
-    <color name="list_item_title">#000000</color>
+    <color name="list_divider">#000000</color>
+    <color name="list_background">#ff2f2f2f</color>
+    <color name="list_background1">#ff2f2f2f</color>
+    <color name="list_background_pressed">#ff2f2f2f</color>
+    <color name="list_item_title">#FFFFFF</color>
 </resources>

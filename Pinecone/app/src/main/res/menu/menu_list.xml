@@ -8,6 +8,7 @@
         android:showAsAction="always"
         android:icon="@drawable/camera"
         android:title="Picture"/>
+    <!--
     <item
         android:id="@+id/action_settings"
         android:title="Settings"
@@ -16,4 +17,5 @@
         android:id="@+id/action_about"
         android:title="About"
         android:icon="@drawable/about"/>
+    -->
 </menu>
