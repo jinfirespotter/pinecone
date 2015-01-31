@@ -43,8 +43,8 @@ public class BaseDrawerActivity extends BaseActivity {
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
         navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.list_slidermenu1);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.pinecone_base_drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.pinecone_base_left_drawer);
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
@@ -65,8 +65,8 @@ public class BaseDrawerActivity extends BaseActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
                 R.drawable.ic_drawer,
-                R.string.app_name, // nav drawer open - description for accessibility
-                R.string.app_name // nav drawer close - description for accessibility
+                R.string.app_name,
+                R.string.app_name
         ) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
@@ -89,7 +89,6 @@ public class BaseDrawerActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
 
@@ -117,7 +116,6 @@ public class BaseDrawerActivity extends BaseActivity {
     @Override
     public void onConfigurationChanged (Configuration newConfig){
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
@@ -134,7 +132,7 @@ public class BaseDrawerActivity extends BaseActivity {
         Intent intent = null;
         switch (position) {
             case 0:
-                intent = new Intent(this, AboutActivity.class);
+                intent = new Intent(this, HomeActivity.class);
                 break;
             case 1:
                 intent = new Intent(this, AboutActivity.class);
@@ -143,7 +141,7 @@ public class BaseDrawerActivity extends BaseActivity {
                 intent = new Intent(this, AboutActivity.class);
                 break;
             default:
-                intent = new Intent(this, AboutActivity.class);
+                intent = new Intent(this, HomeActivity.class);
                 break;
         }
 

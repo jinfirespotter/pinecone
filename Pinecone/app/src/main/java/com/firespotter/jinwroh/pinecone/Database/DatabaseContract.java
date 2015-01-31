@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
  */
 public final class DatabaseContract {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "database.db";
     private static final String INTEGER_TYPE = " INTEGER ";
     private static final String TEXT_TYPE = " TEXT ";

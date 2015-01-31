@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jinroh on 1/30/15.
@@ -58,6 +60,23 @@ public class ContactDataSource {
         return contact;
     }
 
+    public List<Contact> getAllContacts() {
+        List<Contact> contacts = new ArrayList<Contact>();
+
+        Cursor cursor = database.query(DatabaseContract.contact.TABLE_NAME,
+                DatabaseContract.contact.KEY_ARRAY, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Contact contact = cursorToContact(cursor);
+            contacts.add(contact);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return contacts;
+    }
+
     private Contact cursorToContact(Cursor cursor) {
 
         Contact contact = new Contact();
@@ -69,8 +88,7 @@ public class ContactDataSource {
         contact.setPhoneNumber(cursor.getString(4) );
         contact.setCompany( cursor.getString(5) );
         contact.setPosition( cursor.getString(6) );
-        contact.setPosition( cursor.getString(7) );
-        contact.setNotes( cursor.getString(8) );
+        contact.setNotes( cursor.getString(7) );
 
         return contact;
     }

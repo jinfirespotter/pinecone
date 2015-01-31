@@ -10,6 +10,8 @@ import com.firespotter.jinwroh.pinecone.Database.DatabaseHelper;
 import com.firespotter.jinwroh.pinecone.Database.Photo;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jinroh on 1/28/15.
@@ -52,6 +54,23 @@ public class PhotoDataSource {
         cursor.close();
 
         return photo;
+    }
+
+    public List<Photo> getAllPhotos() {
+        List<Photo> photos = new ArrayList<Photo>();
+
+        Cursor cursor = database.query(DatabaseContract.photo.TABLE_NAME,
+                DatabaseContract.photo.KEY_ARRAY, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Photo photo = cursorToPhoto(cursor);
+            photos.add(photo);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return photos;
     }
 
 

@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * Created by jinroh on 1/30/15.
  */
-public class PhotoActivity extends BaseActivity {
+public class PhotoActivity extends BaseDrawerActivity {
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
@@ -110,7 +110,6 @@ public class PhotoActivity extends BaseActivity {
 
             fos = new FileOutputStream(mypath);
 
-            // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
         } catch (Exception e) {

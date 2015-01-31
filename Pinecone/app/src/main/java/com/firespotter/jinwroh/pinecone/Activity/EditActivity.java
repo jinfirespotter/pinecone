@@ -96,6 +96,9 @@ public class EditActivity extends Activity {
             e.printStackTrace();
         }
 
+        photoDataSource.close();
+        contactDataSource.close();
+
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
