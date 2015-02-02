@@ -1,12 +1,20 @@
 package com.firespotter.jinwroh.pinecone.Database;
 
+import java.io.Serializable;
+
 /**
  * Created by jinroh on 1/28/15.
  */
-public class Photo {
+public class Photo implements Serializable{
 
     private long id;
     private String filepath;
+
+    public Photo() { }
+
+    public Photo (String filepath) {
+       this.filepath = filepath;
+    }
 
     public Photo(long id, String filepath) {
         this.id = id;

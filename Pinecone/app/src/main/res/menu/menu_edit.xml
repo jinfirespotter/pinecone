@@ -2,6 +2,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.firespotter.jinwroh.pinecone.Activity.EditActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:icon="@drawable/save"
+        android:title="Save"/>
+
+    <item
+        android:id="@+id/action_retake_picture"
+        android:title="Retake Picture"/>
+
+    <item
+        android:id="@+id/action_save_to_gallery"
+        android:title="Save To Gallery"/>
+
+    <item
+        android:id="@+id/action_send_email"
+        android:title="Send Email"/>
+
+    <item
+        android:id="@+id/action_delete"
+        android:title="Delete"/>
+
 </menu>

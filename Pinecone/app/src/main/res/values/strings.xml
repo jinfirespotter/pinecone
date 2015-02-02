@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Pinecone!</string>
+    <string name="title_activity_home">Home</string>
     <string name="title_activity_about">About</string>
     <string name="title_activity_edit">Edit</string>
     <string name="album_name">PineconeAlbum</string>

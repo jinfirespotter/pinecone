@@ -1,4 +1,4 @@
-package com.firespotter.jinwroh.pinecone;
+package com.firespotter.jinwroh.pinecone.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,13 +12,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.firespotter.jinwroh.pinecone.Activity.BaseActivity;
 import com.firespotter.jinwroh.pinecone.Database.Photo;
+import com.firespotter.jinwroh.pinecone.R;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,8 +56,14 @@ public class HomeListAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.home_list_item, null);
         }
 
+        convertView.setFocusable(false);
+        convertView.setClickable(false);
+
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.thumbnail2);
-        TextView txtTitle = (TextView) convertView.findViewById(R.id.text2);
+
+        TextView nameText = (TextView) convertView.findViewById(R.id.name);
+        TextView positionText = (TextView) convertView.findViewById(R.id.position);
+        TextView companyText = (TextView) convertView.findViewById(R.id.company);
 
         Photo photo = navItems.get(position).getPhoto();
 
@@ -68,13 +73,15 @@ public class HomeListAdapter extends BaseAdapter {
 
             ThumbnailUtils thumbnailUtils = new ThumbnailUtils();
 
-            imgIcon.setImageBitmap(thumbnailUtils.extractThumbnail(thumbnail, 100, 100));
-            txtTitle.setText(navItems.get(position).getContact().getNotes());
+            imgIcon.setImageBitmap(thumbnailUtils.extractThumbnail(thumbnail, 120, 80));
+
+            nameText.setText(navItems.get(position).getContact().getName());
+            positionText.setText(navItems.get(position).getContact().getPosition());
+            companyText.setText(navItems.get(position).getContact().getCompany());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
 
         return convertView;
     }

@@ -1,9 +1,11 @@
 package com.firespotter.jinwroh.pinecone.Database;
 
+import java.io.Serializable;
+
 /**
  * Created by jinroh on 1/28/15.
  */
-public class Contact {
+public class Contact implements Serializable{
 
     private long id;
     private long photoId;
@@ -21,7 +23,7 @@ public class Contact {
         this.photoId = photoId;
     }
 
-    public long getId() {return this.id; }
+    public long getId() { return this.id; }
 
     public void setId(long id) { this.id = id; }
 

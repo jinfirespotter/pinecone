@@ -1,4 +1,4 @@
-package com.firespotter.jinwroh.pinecone;
+package com.firespotter.jinwroh.pinecone.Adapter;
 
 /**
  * Created by jinroh on 1/29/15.

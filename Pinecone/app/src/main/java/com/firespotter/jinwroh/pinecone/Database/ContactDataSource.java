@@ -29,22 +29,50 @@ public class ContactDataSource {
         databaseHelper.close();
     }
 
-    public long createContact(long photoId, String name, String email, String phoneNumber,
-                              String company, String position, String notes) {
+    public long createContact(Contact contact) {
 
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseContract.contact.KEY_PHOTO_ID, photoId);
-        values.put(DatabaseContract.contact.KEY_NAME, name);
-        values.put(DatabaseContract.contact.KEY_EMAIL, email);
-        values.put(DatabaseContract.contact.KEY_PHONE_NUMBER, phoneNumber);
-        values.put(DatabaseContract.contact.KEY_COMPANY, company);
-        values.put(DatabaseContract.contact.KEY_POSITION, position);
-        values.put(DatabaseContract.contact.KEY_NOTES, notes);
+        values.put(DatabaseContract.contact.KEY_PHOTO_ID, contact.getPhotoId());
+        values.put(DatabaseContract.contact.KEY_NAME, contact.getName());
+        values.put(DatabaseContract.contact.KEY_EMAIL, contact.getEmail());
+        values.put(DatabaseContract.contact.KEY_PHONE_NUMBER, contact.getPhoneNumber());
+        values.put(DatabaseContract.contact.KEY_COMPANY, contact.getCompany());
+        values.put(DatabaseContract.contact.KEY_POSITION, contact.getPosition());
+        values.put(DatabaseContract.contact.KEY_NOTES, contact.getNotes());
 
         long insertId = database.insert(DatabaseContract.contact.TABLE_NAME, null, values);
 
         return insertId;
+    }
+
+    public long updateOrInsert(Contact contact) {
+
+        if (retrieveContact(contact.getId()) == null) {
+            return createContact(contact);
+        }
+        else {
+            return updateContact(contact);
+        }
+    }
+
+    public long updateContact(Contact contact) {
+        ContentValues values = new ContentValues();
+
+        values.put(DatabaseContract.contact.KEY_PHOTO_ID, contact.getPhotoId());
+        values.put(DatabaseContract.contact.KEY_NAME, contact.getName());
+        values.put(DatabaseContract.contact.KEY_EMAIL, contact.getEmail());
+        values.put(DatabaseContract.contact.KEY_PHONE_NUMBER, contact.getPhoneNumber());
+        values.put(DatabaseContract.contact.KEY_COMPANY, contact.getCompany());
+        values.put(DatabaseContract.contact.KEY_POSITION, contact.getPosition());
+        values.put(DatabaseContract.contact.KEY_NOTES, contact.getNotes());
+
+        database.update(DatabaseContract.contact.TABLE_NAME,
+                values,
+                DatabaseContract.contact._ID + " = " + contact.getId(),
+                null);
+
+        return contact.getId();
     }
 
     public Contact retrieveContact(long id) {
@@ -52,6 +80,10 @@ public class ContactDataSource {
                 DatabaseContract.contact.KEY_ARRAY,
                 DatabaseContract.contact._ID + " = " + id,
                 null, null, null, null);
+
+        if (cursor.getCount() == 0) {
+            return null;
+        }
 
         cursor.moveToFirst();
         Contact contact = cursorToContact(cursor);

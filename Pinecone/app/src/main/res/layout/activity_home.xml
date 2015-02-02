@@ -8,13 +8,9 @@
 
     <!-- Framelayout to display Fragments -->
     <ListView
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
     </ListView>
 
     <!-- Listview to display slider menu -->
@@ -24,6 +20,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
+        android:minHeight="100dp"
         android:divider="@color/list_divider"
         android:dividerHeight="2dp"
         android:listSelector="@drawable/list_selector"

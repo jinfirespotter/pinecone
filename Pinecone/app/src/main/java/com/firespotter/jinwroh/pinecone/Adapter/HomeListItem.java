@@ -1,4 +1,4 @@
-package com.firespotter.jinwroh.pinecone;
+package com.firespotter.jinwroh.pinecone.Adapter;
 
 import com.firespotter.jinwroh.pinecone.Database.Contact;
 import com.firespotter.jinwroh.pinecone.Database.Photo;

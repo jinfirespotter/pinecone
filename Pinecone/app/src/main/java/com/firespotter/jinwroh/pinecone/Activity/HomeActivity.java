@@ -1,20 +1,19 @@
 package com.firespotter.jinwroh.pinecone.Activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.firespotter.jinwroh.pinecone.Database.Contact;
 import com.firespotter.jinwroh.pinecone.Database.ContactDataSource;
 import com.firespotter.jinwroh.pinecone.Database.Photo;
 import com.firespotter.jinwroh.pinecone.Database.PhotoDataSource;
-import com.firespotter.jinwroh.pinecone.HomeListAdapter;
-import com.firespotter.jinwroh.pinecone.HomeListItem;
+import com.firespotter.jinwroh.pinecone.Adapter.HomeListAdapter;
+import com.firespotter.jinwroh.pinecone.Adapter.HomeListItem;
 import com.firespotter.jinwroh.pinecone.R;
 
 import java.sql.SQLException;
@@ -22,10 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeActivity extends PhotoActivity {
-
-    public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
-    static final int REQUEST_TAKE_PHOTO = 1;
+public class HomeActivity extends BaseDrawerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,58 +36,20 @@ public class HomeActivity extends PhotoActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
-        /*
-        if (featureId == Window.FEATURE_ACTION_BAR && menu != null) {
-            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
-                try {
-                    Method m = menu.getClass().getDeclaredMethod(
-                            "setOptionalIconsVisible", Boolean.TYPE);
-                    m.setAccessible(true);
-                    m.invoke(menu, true);
-                } catch (NoSuchMethodException e) {
-
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        */
         return super.onMenuOpened(featureId, menu);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_picture) {
-            super.dispatchTakePictureIntent(REQUEST_TAKE_PHOTO);
-        }
-        else {
-            return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-
-            super.saveToInternalStorage(mCurrentPhotoPath);
-            super.saveToGallery(mCurrentPhotoPath);
-
-            Intent intent = new Intent(this, EditActivity.class);
-            intent.putExtra(EXTRA_MESSAGE, mCurrentPhotoPath);
-            startActivity(intent);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -112,13 +70,11 @@ public class HomeActivity extends PhotoActivity {
         List<Photo> photoList = photoDataSource.getAllPhotos();
         List<Contact> contactList = contactDataSource.getAllContacts();
 
-        List<HomeListItem> homeListItemList = new ArrayList<HomeListItem>();
+        final List<HomeListItem> homeListItemList = new ArrayList<HomeListItem>();
 
-        // O(n^2)! Oh No!
+        // O(n^2)! Oh No! TODO: Optimize query
         for (Photo photo : photoList) {
-
             long photoId = photo.getId();
-
             for (int i = 0; i < contactList.size(); i++) {
                 if (contactList.get(i).getPhotoId() == photoId) {
                     HomeListItem homeListItem = new HomeListItem(photo, contactList.get(i));
@@ -129,6 +85,20 @@ public class HomeActivity extends PhotoActivity {
 
         HomeListAdapter homeAdapter = new HomeListAdapter(getApplicationContext(), homeListItemList);
         homeList.setAdapter(homeAdapter);
+
+        homeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), EditActivity.class);
+
+                Photo photo = homeListItemList.get(position).getPhoto();
+                Contact contact = homeListItemList.get(position).getContact();
+
+                intent.putExtra(PhotoActivity.PHOTO_ACTIVITY_PHOTO, photo);
+                intent.putExtra(PhotoActivity.PHOTO_ACTIVITY_CONTACT, contact);
+
+                startActivity(intent);
+            }
+        });
 
         photoDataSource.close();
         contactDataSource.close();

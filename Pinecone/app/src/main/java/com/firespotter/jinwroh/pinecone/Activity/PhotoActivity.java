@@ -9,7 +9,10 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 
+import com.firespotter.jinwroh.pinecone.Database.Contact;
+import com.firespotter.jinwroh.pinecone.Database.Photo;
 import com.firespotter.jinwroh.pinecone.R;
 
 import java.io.File;
@@ -17,47 +20,102 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by jinroh on 1/30/15.
  */
-public class PhotoActivity extends BaseDrawerActivity {
+public class PhotoActivity extends BaseActivity {
 
-    private static final String JPEG_FILE_PREFIX = "IMG_";
-    private static final String JPEG_FILE_SUFFIX = ".jpg";
+    static final int REQUEST_TAKE_PHOTO = 100;
 
-    String mCurrentPhotoPath;
+    public final static String PHOTO_ACTIVITY_PHOTO = "com.firespotter.pinecone.photo";
+    public final static String PHOTO_ACTIVITY_CONTACT = "com.firespotter.pinecone.contact";
 
-    public void dispatchTakePictureIntent(int requestCode) {
+    public static final String JPEG_FILE_PREFIX = "IMG_";
+    public static final String JPEG_FILE_SUFFIX = ".jpg";
+
+    private Photo photo;
+    private Contact contact;
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_picture) {
+            this.takeNewPicture();
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+
+    public void takeNewPicture() {
+        this.photo = new Photo();
+        this.contact = new Contact();
+
+        this.dispatchTakePictureIntent();
+    }
+
+
+    public void retakePicture(Photo photo, Contact contact) {
+        this.photo = photo;
+        this.contact = contact;
+
+        this.dispatchTakePictureIntent();
+    }
+
+
+    private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
+            }
+            catch (IOException ex) {
                 ex.printStackTrace();
             }
-            // Continue only if the File was successfully created
+
             if (photoFile != null) {
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, requestCode);
+                this.photo.setFilepath(photoFile.getAbsolutePath());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, this.REQUEST_TAKE_PHOTO);
             }
         }
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == this.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+
+            String savedPath = this.saveToInternalStorage(this.photo.getFilepath());
+            this.photo.setFilepath(savedPath);
+
+            Intent intent = new Intent(this, EditActivity.class);
+
+            intent.putExtra(this.PHOTO_ACTIVITY_PHOTO, photo);
+            intent.putExtra(this.PHOTO_ACTIVITY_CONTACT, contact);
+
+            startActivity(intent);
+        }
+    }
+
+
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
-        File albumF = getAlbumDir();
-        File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
-        return imageF;
+        String imageFileName = this.JPEG_FILE_PREFIX + timeStamp + "_";
+        File album = getAlbumDir();
+        File image = File.createTempFile(imageFileName, this.JPEG_FILE_SUFFIX, album);
+        return image;
     }
 
 
@@ -94,36 +152,29 @@ public class PhotoActivity extends BaseDrawerActivity {
 
 
     public String saveToInternalStorage(String path) {
-        return this.saveToInternalStorage(BitmapFactory.decodeFile(path));
-    }
 
+        File source = new File(path);
 
-    public String saveToInternalStorage(Bitmap bitmapImage){
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory, "profile.jpg");
+        File destination = new File(directory, source.getName());
 
-        FileOutputStream fos = null;
         try {
+            InputStream in = new FileInputStream(source);
+            OutputStream out = new FileOutputStream(destination);
 
-            fos = new FileOutputStream(mypath);
-
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
-        } catch (Exception e) {
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
-        return mypath.getAbsolutePath();
-    }
 
-
-    public void saveToGallery(String path) {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(path);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
+        return destination.getAbsolutePath();
     }
 }

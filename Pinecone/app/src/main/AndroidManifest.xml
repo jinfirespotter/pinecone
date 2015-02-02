@@ -12,12 +12,12 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/grass"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".Activity.HomeActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_home"
             android:theme="@style/MyTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.firespotter.jinwroh.pinecone.NavDrawerItem;
-import com.firespotter.jinwroh.pinecone.NavDrawerListAdapter;
+import com.firespotter.jinwroh.pinecone.Adapter.NavDrawerItem;
+import com.firespotter.jinwroh.pinecone.Adapter.NavDrawerListAdapter;
 import com.firespotter.jinwroh.pinecone.R;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by jinroh on 1/30/15.
  */
-public class BaseDrawerActivity extends BaseActivity {
+public class BaseDrawerActivity extends PhotoActivity {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;

@@ -9,9 +9,17 @@
         <item name="android:actionBarStyle">@style/MyActionBarStyle</item>
     </style>
 
-    <style name="MyActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:displayOptions">showHome</item>
-        <item name="android:background">#FF4D67</item>
+    <style name="MyActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:displayOptions">showHome|showTitle</item>
+        <item name="android:textColor">#ffbcbcbc</item>
+        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
+        <item name="android:logo">@drawable/actionbar_space_between_icon_and_title</item>
+        <item name="android:background">#ff2d2d30</item>
+    </style>
+
+
+    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#ffbcbcbc</item>
     </style>
 
 

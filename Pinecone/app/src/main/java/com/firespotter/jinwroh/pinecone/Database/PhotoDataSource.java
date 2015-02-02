@@ -33,21 +33,49 @@ public class PhotoDataSource {
         databaseHelper.close();
     }
 
-    public long createPhoto(String filepath) {
+    public long createPhoto(Photo photo) {
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseContract.photo.KEY_FILEPATH, filepath);
+        values.put(DatabaseContract.photo.KEY_FILEPATH, photo.getFilepath());
 
         long insertId = database.insert(DatabaseContract.photo.TABLE_NAME, null, values);
 
         return insertId;
     }
 
+    public long updatePhoto(Photo photo) {
+        ContentValues values = new ContentValues();
+
+        values.put(DatabaseContract.photo.KEY_FILEPATH, photo.getFilepath());
+        database.update(DatabaseContract.photo.TABLE_NAME,
+                values,
+                DatabaseContract.photo._ID + " = " + photo.getId(),
+                null);
+
+        return photo.getId();
+    }
+
+
+    public long updateOrInsert(Photo photo) {
+
+        if (retrievePhoto(photo.getId()) == null) {
+            return createPhoto(photo);
+        }
+        else {
+            return updatePhoto(photo);
+        }
+    }
+
+
     public Photo retrievePhoto(long id) {
         Cursor cursor = database.query(DatabaseContract.photo.TABLE_NAME,
                 DatabaseContract.photo.KEY_ARRAY,
                 DatabaseContract.photo._ID + " = " + id,
                 null, null, null, null);
+
+        if (cursor.getCount() == 0) {
+            return null;
+        }
 
         cursor.moveToFirst();
         Photo photo = cursorToPhoto(cursor);
