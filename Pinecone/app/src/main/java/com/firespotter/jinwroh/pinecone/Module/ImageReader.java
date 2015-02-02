@@ -98,7 +98,7 @@ public class ImageReader {
         this.tess.setImage(this.bitmap);
 
         // DEBUG!
-        System.out.println("====" + this.tess.getUTF8Text());
+        //System.out.println("====" + this.tess.getUTF8Text());
 
         return this.tess.getUTF8Text();
     }

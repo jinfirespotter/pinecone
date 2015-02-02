@@ -12,22 +12,28 @@ import java.util.List;
 /**
  * Created by jinroh on 1/30/15.
  */
+
+// TODO: Guard against SQL injections
 public class ContactDataSource {
 
     private SQLiteDatabase database;
     private DatabaseHelper databaseHelper;
 
+
     public ContactDataSource(Context context) {
         databaseHelper = new DatabaseHelper(context);
     }
+
 
     public void open() throws SQLException {
         database = databaseHelper.getWritableDatabase();
     }
 
+
     public void close() {
         databaseHelper.close();
     }
+
 
     public long createContact(Contact contact) {
 
@@ -46,6 +52,7 @@ public class ContactDataSource {
         return insertId;
     }
 
+
     public long updateOrInsert(Contact contact) {
 
         if (retrieveContact(contact.getId()) == null) {
@@ -55,6 +62,7 @@ public class ContactDataSource {
             return updateContact(contact);
         }
     }
+
 
     public long updateContact(Contact contact) {
         ContentValues values = new ContentValues();
@@ -75,6 +83,13 @@ public class ContactDataSource {
         return contact.getId();
     }
 
+
+    public boolean deleteContact(Contact contact) {
+        return database.delete(DatabaseContract.contact.TABLE_NAME,
+                DatabaseContract.contact._ID + " = " + contact.getId(), null) > 0;
+    }
+
+
     public Contact retrieveContact(long id) {
         Cursor cursor = database.query(DatabaseContract.contact.TABLE_NAME,
                 DatabaseContract.contact.KEY_ARRAY,
@@ -92,6 +107,7 @@ public class ContactDataSource {
         return contact;
     }
 
+
     public List<Contact> getAllContacts() {
         List<Contact> contacts = new ArrayList<Contact>();
 
@@ -104,10 +120,11 @@ public class ContactDataSource {
             contacts.add(contact);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
+
         cursor.close();
         return contacts;
     }
+
 
     private Contact cursorToContact(Cursor cursor) {
 

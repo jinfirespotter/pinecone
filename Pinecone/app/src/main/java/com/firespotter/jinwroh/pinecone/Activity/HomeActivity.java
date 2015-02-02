@@ -1,6 +1,9 @@
 package com.firespotter.jinwroh.pinecone.Activity;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +19,11 @@ import com.firespotter.jinwroh.pinecone.Adapter.HomeListAdapter;
 import com.firespotter.jinwroh.pinecone.Adapter.HomeListItem;
 import com.firespotter.jinwroh.pinecone.R;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +33,10 @@ public class HomeActivity extends BaseDrawerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // For testing purposes
+        this.initializeSamples();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -102,5 +114,59 @@ public class HomeActivity extends BaseDrawerActivity {
 
         photoDataSource.close();
         contactDataSource.close();
+    }
+
+
+    public void initializeSamples() {
+
+        String[] sampleFiles = {"card1.jpg", "card2.png", "card3.jpg"};
+
+        try {
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+
+           for (String s : sampleFiles) {
+
+               File destination = new File(directory, s);
+
+               if (!destination.exists()) {
+
+                   AssetManager assetManager = getAssets();
+                   InputStream in = assetManager.open("sample/" + s);
+                   OutputStream out = new FileOutputStream(destination);
+
+                   byte[] buf = new byte[1024];
+                   int len;
+
+                   while ((len = in.read(buf)) > 0) {
+                       out.write(buf, 0, len);
+                   }
+
+                   in.close();
+                   out.close();
+
+                   Photo photo = new Photo(destination.getAbsolutePath());
+                   PhotoDataSource photoDataSource = new PhotoDataSource(this);
+                   photoDataSource.open();
+
+                   long photoId = photoDataSource.updateOrInsert(photo);
+
+                   Contact contact = new Contact();
+                   contact.setPhotoId(photoId);
+
+                   ContactDataSource contactDataSource = new ContactDataSource(this);
+                   contactDataSource.open();
+                   contactDataSource.updateOrInsert(contact);
+
+                   photoDataSource.close();
+                   contactDataSource.close();
+               }
+           }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

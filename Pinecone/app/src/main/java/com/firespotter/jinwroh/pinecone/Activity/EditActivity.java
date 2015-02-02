@@ -33,6 +33,7 @@ public class EditActivity extends PhotoActivity {
     private Photo photo;
     private Contact contact;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +109,7 @@ public class EditActivity extends PhotoActivity {
                 break;
 
             case R.id.action_rescan_picture:
+                this.rescanPicture();
                 break;
 
             case R.id.action_add_to_contacts:
@@ -138,7 +140,17 @@ public class EditActivity extends PhotoActivity {
 
 
     public void rescanPicture() {
+        Bitmap image = null;
+        try {
+            image = BitmapFactory.decodeStream(new FileInputStream(photo.getFilepath()));
+            ImageReader imageReader = new ImageReader(this, image);
+            String text = imageReader.convertImageToText();
 
+            EditText editNotes = (EditText) findViewById(R.id.edit_notes);
+            editNotes.setText(text);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -188,6 +200,22 @@ public class EditActivity extends PhotoActivity {
 
     public void delete() {
 
+        try {
+            photoDataSource.open();
+            contactDataSource.open();
+
+            photoDataSource.deletePhoto(photo);
+            contactDataSource.deleteContact(contact);
+
+            photoDataSource.close();
+            contactDataSource.close();
+
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -208,7 +236,7 @@ public class EditActivity extends PhotoActivity {
 
 
     public void savePictureToGallery(String path) {
-        System.out.println(path);
+        //System.out.println(path);
 
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File file = new File(path);
@@ -216,6 +244,4 @@ public class EditActivity extends PhotoActivity {
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
-
-
 }

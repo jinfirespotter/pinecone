@@ -16,22 +16,27 @@ import java.util.List;
 /**
  * Created by jinroh on 1/28/15.
  */
+// TODO: Guard against SQL injections
 public class PhotoDataSource {
 
     private SQLiteDatabase database;
     private DatabaseHelper databaseHelper;
 
+
     public PhotoDataSource(Context context) {
         databaseHelper = new DatabaseHelper(context);
     }
+
 
     public void open() throws SQLException {
         database = databaseHelper.getWritableDatabase();
     }
 
+
     public void close() {
         databaseHelper.close();
     }
+
 
     public long createPhoto(Photo photo) {
         ContentValues values = new ContentValues();
@@ -42,6 +47,7 @@ public class PhotoDataSource {
 
         return insertId;
     }
+
 
     public long updatePhoto(Photo photo) {
         ContentValues values = new ContentValues();
@@ -67,6 +73,12 @@ public class PhotoDataSource {
     }
 
 
+    public boolean deletePhoto(Photo photo) {
+        return database.delete(DatabaseContract.photo.TABLE_NAME,
+                DatabaseContract.photo._ID + " = " + photo.getId(), null) > 0;
+    }
+
+
     public Photo retrievePhoto(long id) {
         Cursor cursor = database.query(DatabaseContract.photo.TABLE_NAME,
                 DatabaseContract.photo.KEY_ARRAY,
@@ -84,6 +96,7 @@ public class PhotoDataSource {
         return photo;
     }
 
+
     public List<Photo> getAllPhotos() {
         List<Photo> photos = new ArrayList<Photo>();
 
@@ -96,7 +109,7 @@ public class PhotoDataSource {
             photos.add(photo);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
+
         cursor.close();
         return photos;
     }
