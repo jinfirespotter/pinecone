@@ -90,6 +90,11 @@ public class ContactDataSource {
     }
 
 
+    public void deleteAll() {
+        database.execSQL("delete from " + DatabaseContract.contact.TABLE_NAME);
+    }
+
+
     public Contact retrieveContact(long id) {
         Cursor cursor = database.query(DatabaseContract.contact.TABLE_NAME,
                 DatabaseContract.contact.KEY_ARRAY,

@@ -2,6 +2,7 @@ package com.firespotter.jinwroh.pinecone.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -9,6 +10,7 @@ import com.firespotter.jinwroh.pinecone.Database.DatabaseContract;
 import com.firespotter.jinwroh.pinecone.Database.DatabaseHelper;
 import com.firespotter.jinwroh.pinecone.Database.Photo;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,12 @@ public class PhotoDataSource {
     private SQLiteDatabase database;
     private DatabaseHelper databaseHelper;
 
+    private Context context;
+
 
     public PhotoDataSource(Context context) {
-        databaseHelper = new DatabaseHelper(context);
+        this.context = context;
+        this.databaseHelper = new DatabaseHelper(context);
     }
 
 
@@ -74,6 +79,10 @@ public class PhotoDataSource {
 
 
     public boolean deletePhoto(Photo photo) {
+
+        File photoFile = new File(photo.getFilepath());
+        photoFile.delete();
+
         return database.delete(DatabaseContract.photo.TABLE_NAME,
                 DatabaseContract.photo._ID + " = " + photo.getId(), null) > 0;
     }
@@ -94,6 +103,18 @@ public class PhotoDataSource {
         cursor.close();
 
         return photo;
+    }
+
+
+    public void deleteAll() {
+        database.execSQL("delete from " + DatabaseContract.contact.TABLE_NAME);
+
+        ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+
+        for(File file: directory.listFiles()) {
+            file.delete();
+        }
     }
 
 

@@ -125,6 +125,7 @@ public class EditActivity extends PhotoActivity {
                 break;
 
             case R.id.action_send_email:
+                this.sendEmail();
                 break;
 
             case R.id.action_delete:
@@ -199,7 +200,6 @@ public class EditActivity extends PhotoActivity {
 
 
     public void delete() {
-
         try {
             photoDataSource.open();
             contactDataSource.open();
@@ -220,7 +220,6 @@ public class EditActivity extends PhotoActivity {
 
 
     public void addToContacts() {
-
         Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
         intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 
@@ -236,12 +235,21 @@ public class EditActivity extends PhotoActivity {
 
 
     public void savePictureToGallery(String path) {
-        //System.out.println(path);
-
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File file = new File(path);
         Uri contentUri = Uri.fromFile(file);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
+    }
+
+
+    private void sendEmail() {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            finish();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this, "No Email Client Installed!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
