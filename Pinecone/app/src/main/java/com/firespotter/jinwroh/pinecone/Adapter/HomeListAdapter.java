@@ -28,6 +28,7 @@ public class HomeListAdapter extends BaseAdapter {
     private Context context;
     private List<HomeListItem> navItems;
 
+
     public HomeListAdapter(Context context, List<HomeListItem> navItems) {
         this.context = context;
         this.navItems = navItems;
@@ -39,15 +40,18 @@ public class HomeListAdapter extends BaseAdapter {
         return navItems.size();
     }
 
+
     @Override
     public Object getItem(int position) {
         return navItems.get(position);
     }
 
+
     @Override
     public long getItemId(int position) {
         return position;
     }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

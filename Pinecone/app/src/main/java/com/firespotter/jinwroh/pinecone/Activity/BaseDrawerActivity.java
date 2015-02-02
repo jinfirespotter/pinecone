@@ -84,6 +84,7 @@ public class BaseDrawerActivity extends PhotoActivity {
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
     }
 
+
     @Override
     public boolean onOptionsItemSelected (MenuItem item){
         if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -128,6 +129,7 @@ public class BaseDrawerActivity extends PhotoActivity {
         }
     }
 
+
     private void displayView(int position) {
 
         Intent intent = null;
@@ -148,5 +150,4 @@ public class BaseDrawerActivity extends PhotoActivity {
 
         startActivity(intent);
     }
-
 }

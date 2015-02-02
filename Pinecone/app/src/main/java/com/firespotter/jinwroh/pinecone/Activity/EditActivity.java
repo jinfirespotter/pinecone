@@ -18,6 +18,7 @@ import com.firespotter.jinwroh.pinecone.Database.ContactDataSource;
 import com.firespotter.jinwroh.pinecone.Database.Photo;
 import com.firespotter.jinwroh.pinecone.Database.PhotoDataSource;
 import com.firespotter.jinwroh.pinecone.Module.ImageReader;
+import com.firespotter.jinwroh.pinecone.Module.TextExtractor;
 import com.firespotter.jinwroh.pinecone.R;
 
 import java.io.File;
@@ -69,10 +70,7 @@ public class EditActivity extends PhotoActivity {
         EditText editNotes = (EditText) findViewById(R.id.edit_notes);
 
         if (pictureTaken) {
-            ImageReader imageReader = new ImageReader(this, image);
-            String text = imageReader.convertImageToText();
-
-            editNotes.setText(text);
+            rescanPicture();
         }
         else {
             editName.setText(contact.getName());
@@ -144,12 +142,21 @@ public class EditActivity extends PhotoActivity {
         Bitmap image = null;
         try {
             image = BitmapFactory.decodeStream(new FileInputStream(photo.getFilepath()));
+
             ImageReader imageReader = new ImageReader(this, image);
+
             String text = imageReader.convertImageToText();
+            TextExtractor textExtractor = new TextExtractor(text);
+
+            String emailString = textExtractor.extractEmail();
 
             EditText editNotes = (EditText) findViewById(R.id.edit_notes);
+            EditText editEmail = (EditText) findViewById(R.id.edit_email);
+
             editNotes.setText(text);
-        } catch (FileNotFoundException e) {
+            editEmail.setText(emailString);
+        }
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
