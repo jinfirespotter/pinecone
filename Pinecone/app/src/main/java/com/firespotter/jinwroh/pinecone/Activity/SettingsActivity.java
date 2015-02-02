@@ -25,6 +25,7 @@ public class SettingsActivity extends BaseDrawerActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);

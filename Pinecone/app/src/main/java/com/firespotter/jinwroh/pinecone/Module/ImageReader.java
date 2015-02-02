@@ -57,12 +57,12 @@ public class ImageReader {
             }
         }
 
-        String destDir = this.destinationDirectory + "tessdata/" + LANG + ".traineddata";
+        String destDir = this.destinationDirectory + "tessdata/" + this.LANG + ".traineddata";
 
         if (!(new File(destDir)).exists()) {
             try {
-                AssetManager assetManager = context.getAssets();
-                InputStream in = assetManager.open("tessdata/" + LANG + ".traineddata");
+                AssetManager assetManager = this.context.getAssets();
+                InputStream in = assetManager.open("tessdata/" + this.LANG + ".traineddata");
                 OutputStream out = new FileOutputStream(destDir);
 
                 byte[] buf = new byte[1024];
@@ -96,10 +96,6 @@ public class ImageReader {
         this.tess.setDebug(true);
         this.tess.init(this.destinationDirectory, LANG);
         this.tess.setImage(this.bitmap);
-
-        // DEBUG!
-        //System.out.println("====" + this.tess.getUTF8Text());
-
         return this.tess.getUTF8Text();
     }
 }

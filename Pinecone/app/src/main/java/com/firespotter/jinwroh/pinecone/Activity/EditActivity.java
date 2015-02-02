@@ -40,24 +40,25 @@ public class EditActivity extends PhotoActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        photoDataSource = new PhotoDataSource(this);
-        contactDataSource = new ContactDataSource(this);
+        this.photoDataSource = new PhotoDataSource(this);
+        this.contactDataSource = new ContactDataSource(this);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
 
-        photo = (Photo) intent.getSerializableExtra(PhotoActivity.PHOTO_ACTIVITY_PHOTO);
-        contact = (Contact) intent.getSerializableExtra(PhotoActivity.PHOTO_ACTIVITY_CONTACT);
+        this.photo = (Photo) intent.getSerializableExtra(PhotoActivity.PHOTO_ACTIVITY_PHOTO);
+        this.contact = (Contact) intent.getSerializableExtra(PhotoActivity.PHOTO_ACTIVITY_CONTACT);
 
+        // Has the picture been taken? If true, it's a new card
+        // If false, we're just editing an existing card.
         Boolean pictureTaken = intent.getBooleanExtra(PhotoActivity.PHOTO_ACTIVITY_FIRST, false);
 
         Bitmap image = null;
         try {
-            image = BitmapFactory.decodeStream(new FileInputStream(photo.getFilepath()));
+            image = BitmapFactory.decodeStream(new FileInputStream(this.photo.getFilepath()));
             ImageView img = (ImageView) findViewById(R.id.edit_photo);
             img.setImageBitmap(image);
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -69,16 +70,17 @@ public class EditActivity extends PhotoActivity {
         EditText editPhone = (EditText) findViewById(R.id.edit_phone);
         EditText editNotes = (EditText) findViewById(R.id.edit_notes);
 
+        // Only scan the picture again when it's a new picture is taken.
         if (pictureTaken) {
             rescanPicture();
         }
         else {
-            editName.setText(contact.getName());
-            editCompany.setText(contact.getCompany());
-            editPosition.setText(contact.getPosition());
-            editEmail.setText(contact.getEmail());
-            editPhone.setText(contact.getPhoneNumber());
-            editNotes.setText(contact.getNotes());
+            editName.setText(this.contact.getName());
+            editCompany.setText(this.contact.getCompany());
+            editPosition.setText(this.contact.getPosition());
+            editEmail.setText(this.contact.getEmail());
+            editPhone.setText(this.contact.getPhoneNumber());
+            editNotes.setText(this.contact.getNotes());
         }
     }
 
@@ -165,10 +167,10 @@ public class EditActivity extends PhotoActivity {
     public void save() {
 
         try {
-            photoDataSource.open();
-            contactDataSource.open();
+            this.photoDataSource.open();
+            this.contactDataSource.open();
 
-            long photoId = photoDataSource.updateOrInsert(photo);
+            long photoId = this.photoDataSource.updateOrInsert(photo);
 
             EditText nameText = (EditText) findViewById(R.id.edit_name);
             EditText companyText = (EditText) findViewById(R.id.edit_company);
@@ -177,25 +179,22 @@ public class EditActivity extends PhotoActivity {
             EditText phoneText = (EditText) findViewById(R.id.edit_phone);
             EditText notesText = (EditText) findViewById(R.id.edit_notes);
 
-            contact.setPhotoId(photoId);
-            contact.setName(nameText.getText().toString());
-            contact.setEmail(emailText.getText().toString());
-            contact.setPhoneNumber(phoneText.getText().toString());
-            contact.setCompany(companyText.getText().toString());
-            contact.setPosition(titleText.getText().toString());
-            contact.setNotes(notesText.getText().toString());
+            this.contact.setPhotoId(photoId);
+            this.contact.setName(nameText.getText().toString());
+            this.contact.setEmail(emailText.getText().toString());
+            this.contact.setPhoneNumber(phoneText.getText().toString());
+            this.contact.setCompany(companyText.getText().toString());
+            this.contact.setPosition(titleText.getText().toString());
+            this.contact.setNotes(notesText.getText().toString());
 
-            contactDataSource.updateOrInsert(contact);
+            this.contactDataSource.updateOrInsert(this.contact);
 
-            photoDataSource.close();
-            contactDataSource.close();
+            this.photoDataSource.close();
+            this.contactDataSource.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        photoDataSource.close();
-        contactDataSource.close();
 
         Context context = getApplicationContext();
         CharSequence text = "Saved Successfully!";
@@ -208,14 +207,14 @@ public class EditActivity extends PhotoActivity {
 
     public void delete() {
         try {
-            photoDataSource.open();
-            contactDataSource.open();
+            this.photoDataSource.open();
+            this.contactDataSource.open();
 
-            photoDataSource.deletePhoto(photo);
-            contactDataSource.deleteContact(contact);
+            this.photoDataSource.deletePhoto(photo);
+            this.contactDataSource.deleteContact(contact);
 
-            photoDataSource.close();
-            contactDataSource.close();
+            this.photoDataSource.close();
+            this.contactDataSource.close();
 
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
@@ -230,12 +229,12 @@ public class EditActivity extends PhotoActivity {
         Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
         intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 
-        intent.putExtra(ContactsContract.Intents.Insert.NAME, contact.getName());
-        intent.putExtra(ContactsContract.Intents.Insert.PHONE, contact.getPhoneNumber());
-        intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, contact.getPosition());
-        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, contact.getEmail());
-        intent.putExtra(ContactsContract.Intents.Insert.COMPANY, contact.getCompany());
-        intent.putExtra(ContactsContract.Intents.Insert.NOTES, contact.getNotes());
+        intent.putExtra(ContactsContract.Intents.Insert.NAME, this.contact.getName());
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, this.contact.getPhoneNumber());
+        intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, this.contact.getPosition());
+        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, this.contact.getEmail());
+        intent.putExtra(ContactsContract.Intents.Insert.COMPANY, this.contact.getCompany());
+        intent.putExtra(ContactsContract.Intents.Insert.NOTES, this.contact.getNotes());
 
         startActivity(intent);
     }

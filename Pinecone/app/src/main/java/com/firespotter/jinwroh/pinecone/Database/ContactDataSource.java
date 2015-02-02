@@ -21,17 +21,17 @@ public class ContactDataSource {
 
 
     public ContactDataSource(Context context) {
-        databaseHelper = new DatabaseHelper(context);
+        this.databaseHelper = new DatabaseHelper(context);
     }
 
 
     public void open() throws SQLException {
-        database = databaseHelper.getWritableDatabase();
+        this.database = this.databaseHelper.getWritableDatabase();
     }
 
 
     public void close() {
-        databaseHelper.close();
+        this.databaseHelper.close();
     }
 
 
@@ -47,7 +47,7 @@ public class ContactDataSource {
         values.put(DatabaseContract.contact.KEY_POSITION, contact.getPosition());
         values.put(DatabaseContract.contact.KEY_NOTES, contact.getNotes());
 
-        long insertId = database.insert(DatabaseContract.contact.TABLE_NAME, null, values);
+        long insertId = this.database.insert(DatabaseContract.contact.TABLE_NAME, null, values);
 
         return insertId;
     }
@@ -75,7 +75,7 @@ public class ContactDataSource {
         values.put(DatabaseContract.contact.KEY_POSITION, contact.getPosition());
         values.put(DatabaseContract.contact.KEY_NOTES, contact.getNotes());
 
-        database.update(DatabaseContract.contact.TABLE_NAME,
+        this.database.update(DatabaseContract.contact.TABLE_NAME,
                 values,
                 DatabaseContract.contact._ID + " = " + contact.getId(),
                 null);
@@ -85,18 +85,18 @@ public class ContactDataSource {
 
 
     public boolean deleteContact(Contact contact) {
-        return database.delete(DatabaseContract.contact.TABLE_NAME,
+        return this.database.delete(DatabaseContract.contact.TABLE_NAME,
                 DatabaseContract.contact._ID + " = " + contact.getId(), null) > 0;
     }
 
 
     public void deleteAll() {
-        database.execSQL("delete from " + DatabaseContract.contact.TABLE_NAME);
+        this.database.execSQL("delete from " + DatabaseContract.contact.TABLE_NAME);
     }
 
 
     public Contact retrieveContact(long id) {
-        Cursor cursor = database.query(DatabaseContract.contact.TABLE_NAME,
+        Cursor cursor = this.database.query(DatabaseContract.contact.TABLE_NAME,
                 DatabaseContract.contact.KEY_ARRAY,
                 DatabaseContract.contact._ID + " = " + id,
                 null, null, null, null);
@@ -116,7 +116,7 @@ public class ContactDataSource {
     public List<Contact> getAllContacts() {
         List<Contact> contacts = new ArrayList<Contact>();
 
-        Cursor cursor = database.query(DatabaseContract.contact.TABLE_NAME,
+        Cursor cursor = this.database.query(DatabaseContract.contact.TABLE_NAME,
                 DatabaseContract.contact.KEY_ARRAY, null, null, null, null, null);
 
         cursor.moveToFirst();
@@ -132,7 +132,6 @@ public class ContactDataSource {
 
 
     private Contact cursorToContact(Cursor cursor) {
-
         Contact contact = new Contact();
 
         contact.setId( cursor.getLong(0) );

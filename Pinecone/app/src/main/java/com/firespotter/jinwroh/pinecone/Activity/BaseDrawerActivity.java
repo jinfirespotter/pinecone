@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Set;
 
 /**
+ * Deals with the sidebar drawer (sidebar menu) functionality.
+ * All classes that implement the side drawer should extend from this class.
+ * 
  * Created by jinroh on 1/30/15.
  */
 public class BaseDrawerActivity extends PhotoActivity {
@@ -131,7 +134,6 @@ public class BaseDrawerActivity extends PhotoActivity {
 
 
     private void displayView(int position) {
-
         Intent intent = null;
         switch (position) {
             case 0:
@@ -147,7 +149,6 @@ public class BaseDrawerActivity extends PhotoActivity {
                 intent = new Intent(this, HomeActivity.class);
                 break;
         }
-
         startActivity(intent);
     }
 }

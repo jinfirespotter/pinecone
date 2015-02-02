@@ -28,6 +28,8 @@ public class HomeListAdapter extends BaseAdapter {
     private Context context;
     private List<HomeListItem> navItems;
 
+    private static final int THUMBNAIL_WIDTH = 120;
+    private static final int THUMBNAIL_HEIGHT = 80;
 
     public HomeListAdapter(Context context, List<HomeListItem> navItems) {
         this.context = context;
@@ -37,13 +39,13 @@ public class HomeListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return navItems.size();
+        return this.navItems.size();
     }
 
 
     @Override
     public Object getItem(int position) {
-        return navItems.get(position);
+        return this.navItems.get(position);
     }
 
 
@@ -56,20 +58,23 @@ public class HomeListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater mInflater =
+                    (LayoutInflater) this.context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.home_list_item, null);
         }
 
+        // Must set these two values to false to stop the view from interfering with
+        // onItemClickListener for Adapter view. (onItemClickListener won't work
+        // if these are not set to false.
         convertView.setFocusable(false);
         convertView.setClickable(false);
 
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.thumbnail2);
-
         TextView nameText = (TextView) convertView.findViewById(R.id.name);
         TextView positionText = (TextView) convertView.findViewById(R.id.position);
         TextView companyText = (TextView) convertView.findViewById(R.id.company);
 
-        Photo photo = navItems.get(position).getPhoto();
+        Photo photo = this.navItems.get(position).getPhoto();
 
         File file = new File(photo.getFilepath());
         try {
@@ -77,11 +82,12 @@ public class HomeListAdapter extends BaseAdapter {
 
             ThumbnailUtils thumbnailUtils = new ThumbnailUtils();
 
-            imgIcon.setImageBitmap(thumbnailUtils.extractThumbnail(thumbnail, 120, 80));
+            imgIcon.setImageBitmap(thumbnailUtils.extractThumbnail(thumbnail,
+                    this.THUMBNAIL_WIDTH, this.THUMBNAIL_HEIGHT));
 
-            nameText.setText(navItems.get(position).getContact().getName());
-            positionText.setText(navItems.get(position).getContact().getPosition());
-            companyText.setText(navItems.get(position).getContact().getCompany());
+            nameText.setText(this.navItems.get(position).getContact().getName());
+            positionText.setText(this.navItems.get(position).getContact().getPosition());
+            companyText.setText(this.navItems.get(position).getContact().getCompany());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -36,7 +36,7 @@ public class TextExtractor {
     // TODO:
     public String extractPhoneNumber() {
         Pattern pattern = Pattern.compile("^[a-zA-Z]+([0-9]+).*");
-        Matcher matcher = pattern.matcher("Testing123Testing");
+        Matcher matcher = pattern.matcher(this.content);
 
         if (matcher.find()) {
             System.out.println(matcher.group(1));
