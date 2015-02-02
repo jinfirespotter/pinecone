@@ -17,6 +17,7 @@ import com.firespotter.jinwroh.pinecone.Adapter.NavDrawerListAdapter;
 import com.firespotter.jinwroh.pinecone.R;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Created by jinroh on 1/30/15.
@@ -135,7 +136,7 @@ public class BaseDrawerActivity extends PhotoActivity {
                 intent = new Intent(this, HomeActivity.class);
                 break;
             case 1:
-                intent = new Intent(this, AboutActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
                 break;
             case 2:
                 intent = new Intent(this, AboutActivity.class);

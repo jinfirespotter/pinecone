@@ -32,6 +32,7 @@ public class PhotoActivity extends BaseActivity {
 
     static final int REQUEST_TAKE_PHOTO = 100;
 
+    public final static String PHOTO_ACTIVITY_FIRST = "com.firespotter.pinecone.first";
     public final static String PHOTO_ACTIVITY_PHOTO = "com.firespotter.pinecone.photo";
     public final static String PHOTO_ACTIVITY_CONTACT = "com.firespotter.pinecone.contact";
 
@@ -102,6 +103,7 @@ public class PhotoActivity extends BaseActivity {
 
             Intent intent = new Intent(this, EditActivity.class);
 
+            intent.putExtra(this.PHOTO_ACTIVITY_FIRST, true);
             intent.putExtra(this.PHOTO_ACTIVITY_PHOTO, photo);
             intent.putExtra(this.PHOTO_ACTIVITY_CONTACT, contact);
 

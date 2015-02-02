@@ -13,8 +13,6 @@ import com.firespotter.jinwroh.pinecone.R;
 
 public class AboutActivity extends BaseDrawerActivity {
 
-    public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
-
     @Override
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

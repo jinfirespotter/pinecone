@@ -1,18 +1,14 @@
 package com.firespotter.jinwroh.pinecone.Activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,18 +19,16 @@ import com.firespotter.jinwroh.pinecone.Database.Photo;
 import com.firespotter.jinwroh.pinecone.Database.PhotoDataSource;
 import com.firespotter.jinwroh.pinecone.Module.ImageReader;
 import com.firespotter.jinwroh.pinecone.R;
-import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.SQLException;
 
 public class EditActivity extends PhotoActivity {
+
+    PhotoDataSource photoDataSource;
+    ContactDataSource contactDataSource;
 
     private Photo photo;
     private Contact contact;
@@ -44,6 +38,9 @@ public class EditActivity extends PhotoActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        photoDataSource = new PhotoDataSource(this);
+        contactDataSource = new ContactDataSource(this);
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
@@ -51,13 +48,11 @@ public class EditActivity extends PhotoActivity {
         photo = (Photo) intent.getSerializableExtra(PhotoActivity.PHOTO_ACTIVITY_PHOTO);
         contact = (Contact) intent.getSerializableExtra(PhotoActivity.PHOTO_ACTIVITY_CONTACT);
 
+        Boolean pictureTaken = intent.getBooleanExtra(PhotoActivity.PHOTO_ACTIVITY_FIRST, false);
+
         Bitmap image = null;
         try {
             image = BitmapFactory.decodeStream(new FileInputStream(photo.getFilepath()));
-
-            ImageReader imageReader = new ImageReader(this, image);
-            imageReader.convertImageToText();
-
             ImageView img = (ImageView) findViewById(R.id.edit_photo);
             img.setImageBitmap(image);
 
@@ -72,12 +67,20 @@ public class EditActivity extends PhotoActivity {
         EditText editPhone = (EditText) findViewById(R.id.edit_phone);
         EditText editNotes = (EditText) findViewById(R.id.edit_notes);
 
-        editName.setText(contact.getName());
-        editCompany.setText(contact.getCompany());
-        editPosition.setText(contact.getPosition());
-        editEmail.setText(contact.getEmail());
-        editPhone.setText(contact.getPhoneNumber());
-        editNotes.setText(contact.getNotes());
+        if (pictureTaken) {
+            ImageReader imageReader = new ImageReader(this, image);
+            String text = imageReader.convertImageToText();
+
+            editNotes.setText(text);
+        }
+        else {
+            editName.setText(contact.getName());
+            editCompany.setText(contact.getCompany());
+            editPosition.setText(contact.getPosition());
+            editEmail.setText(contact.getEmail());
+            editPhone.setText(contact.getPhoneNumber());
+            editNotes.setText(contact.getNotes());
+        }
     }
 
 
@@ -104,6 +107,13 @@ public class EditActivity extends PhotoActivity {
                 this.save();
                 break;
 
+            case R.id.action_rescan_picture:
+                break;
+
+            case R.id.action_add_to_contacts:
+                this.addToContacts();
+                break;
+
             case R.id.action_save_to_gallery:
                 this.savePictureToGallery(this.photo.getFilepath());
                 break;
@@ -116,6 +126,7 @@ public class EditActivity extends PhotoActivity {
                 break;
 
             case R.id.action_delete:
+                this.delete();
                 break;
 
             default:
@@ -126,15 +137,12 @@ public class EditActivity extends PhotoActivity {
     }
 
 
-    public void scanImage(View view) {
-        testTess();
+    public void rescanPicture() {
+
     }
 
 
     public void save() {
-
-        PhotoDataSource photoDataSource = new PhotoDataSource(this);
-        ContactDataSource contactDataSource = new ContactDataSource(this);
 
         try {
             photoDataSource.open();
@@ -169,13 +177,39 @@ public class EditActivity extends PhotoActivity {
         photoDataSource.close();
         contactDataSource.close();
 
-        Intent intent = new Intent(this, HomeActivity.class);
+        Context context = getApplicationContext();
+        CharSequence text = "Saved Successfully!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+
+    public void delete() {
+
+    }
+
+
+    public void addToContacts() {
+
+        Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+        intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+
+        intent.putExtra(ContactsContract.Intents.Insert.NAME, contact.getName());
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, contact.getPhoneNumber());
+        intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, contact.getPosition());
+        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, contact.getEmail());
+        intent.putExtra(ContactsContract.Intents.Insert.COMPANY, contact.getCompany());
+        intent.putExtra(ContactsContract.Intents.Insert.NOTES, contact.getNotes());
+
         startActivity(intent);
     }
 
 
     public void savePictureToGallery(String path) {
         System.out.println(path);
+
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File file = new File(path);
         Uri contentUri = Uri.fromFile(file);
@@ -184,77 +218,4 @@ public class EditActivity extends PhotoActivity {
     }
 
 
-    private void testTess() {
-        try {
-
-            File f=new File("/storage/sdcard/Download/20_offset-pantone-business-card-design-print-downtown-new-york-city-emboss-deboss-corporate-logo-designer-ny.jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-
-            TessBaseAPI baseAPI = new TessBaseAPI();
-
-            String DATA_PATH = Environment.getExternalStorageDirectory().toString() + "/pinecone/";
-            String TAG = "PINE";
-            String lang = "eng";
-
-            String[] paths = new String[] { DATA_PATH, DATA_PATH + "src/main/asset/tessdata/"};
-
-            for (String path : paths) {
-                File dir = new File(path);
-                if (!dir.exists()) {
-                    if (!dir.mkdirs()) {
-                        Log.v(TAG, "ERROR: Creation of directory " + path + " on sdcard failed");
-                        return;
-                    } else {
-                        Log.v(TAG, "Created directory " + path + " on sdcard");
-                    }
-                }
-            }
-
-            /*
-            if ((new File(DATA_PATH + "tessdata/" + lang + ".traineddata")).exists()) {
-                try {
-
-                    AssetManager assetManager = getAssets();
-                    InputStream in = assetManager.open("tessdata/" + lang + ".traineddata");
-                    //GZIPInputStream gin = new GZIPInputStream(in);
-                    OutputStream out = new FileOutputStream(DATA_PATH
-                            + "tessdata/" + lang + ".traineddata");
-
-                    // Transfer bytes from in to out
-                    byte[] buf = new byte[1024];
-                    int len;
-                    //while ((lenf = gin.read(buff)) > 0) {
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-                    in.close();
-                    //gin.close();
-                    out.close();
-
-                    Log.v(TAG, "Copied " + lang + " traineddata");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Was unable to copy " + lang + " traineddata " + e.toString());
-                }
-            }
-            */
-
-
-            baseAPI.setDebug(true) ;
-            baseAPI.init(DATA_PATH, lang);
-            baseAPI.setImage(b);
-            String recognizedText = baseAPI.getUTF8Text();
-            System.out.println(recognizedText);
-
-            Context context = getApplicationContext();
-            //CharSequence text = "Hello toast!";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, recognizedText, duration);
-            toast.show();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }

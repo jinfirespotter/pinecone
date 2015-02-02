@@ -14,12 +14,13 @@
     </string-array>
 
     <array name="nav_drawer_icons">
-        <item>@drawable/about</item>
+        <item>@drawable/home</item>
         <item>@drawable/settings</item>
         <item>@drawable/about</item>
     </array>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
 
 </resources>

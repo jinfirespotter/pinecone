@@ -7,7 +7,7 @@
         android:id="@+id/action_save"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:icon="@drawable/save"
+        android:icon="@drawable/ic_action_save"
         android:title="Save"/>
 
     <item
@@ -15,8 +15,16 @@
         android:title="Retake Picture"/>
 
     <item
+        android:id="@+id/action_rescan_picture"
+        android:title="Rescan Picture"/>
+
+    <item
+        android:id="@+id/action_add_to_contacts"
+        android:title="Add to Contacts"/>
+
+    <item
         android:id="@+id/action_save_to_gallery"
-        android:title="Save To Gallery"/>
+        android:title="Save to Gallery"/>
 
     <item
         android:id="@+id/action_send_email"
