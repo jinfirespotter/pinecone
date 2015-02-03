@@ -101,7 +101,6 @@ public class EditActivity extends PhotoActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
 
         switch (id) {
@@ -140,7 +139,6 @@ public class EditActivity extends PhotoActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
         return true;
     }
 
@@ -148,6 +146,7 @@ public class EditActivity extends PhotoActivity {
     public void rescanPicture() {
         new ImageScanOperation().execute(photo);
     }
+
 
     private class ImageScanOperation extends AsyncTask<Photo, String, String> {
 
@@ -195,11 +194,10 @@ public class EditActivity extends PhotoActivity {
             Toast toast = Toast.makeText(context, toastText, duration);
             toast.show();
         }
-
     }
 
-    public void save() {
 
+    public void save() {
         try {
             this.photoDataSource.open();
             this.contactDataSource.open();
@@ -225,8 +223,8 @@ public class EditActivity extends PhotoActivity {
 
             this.photoDataSource.close();
             this.contactDataSource.close();
-
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -252,8 +250,8 @@ public class EditActivity extends PhotoActivity {
 
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
-
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -286,10 +284,12 @@ public class EditActivity extends PhotoActivity {
     private void sendEmail() {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("application/octet-stream");
+
         try {
             startActivity(Intent.createChooser(emailIntent, "Choose an Email Client:"));
             finish();
-        } catch (android.content.ActivityNotFoundException ex) {
+        }
+        catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "No Email Client Installed!", Toast.LENGTH_SHORT).show();
         }
     }
