@@ -57,10 +57,24 @@ public class HomeListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        HomeListItemViewHolder homeListItemViewHolder;
+
         if (convertView == null) {
             LayoutInflater mInflater =
                     (LayoutInflater) this.context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.home_list_item, null);
+
+            homeListItemViewHolder = new HomeListItemViewHolder();
+            homeListItemViewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail2);
+            homeListItemViewHolder.name = (TextView) convertView.findViewById(R.id.name);
+            homeListItemViewHolder.title = (TextView) convertView.findViewById(R.id.position);
+            homeListItemViewHolder.company = (TextView) convertView.findViewById(R.id.company);
+
+            convertView.setTag(homeListItemViewHolder);
+        }
+        else {
+            homeListItemViewHolder = (HomeListItemViewHolder) convertView.getTag();
         }
 
         // Must set these two values to false to stop the view from interfering with
@@ -68,11 +82,6 @@ public class HomeListAdapter extends BaseAdapter {
         // if these are not set to false.
         convertView.setFocusable(false);
         convertView.setClickable(false);
-
-        ImageView imgIcon = (ImageView) convertView.findViewById(R.id.thumbnail2);
-        TextView nameText = (TextView) convertView.findViewById(R.id.name);
-        TextView positionText = (TextView) convertView.findViewById(R.id.position);
-        TextView companyText = (TextView) convertView.findViewById(R.id.company);
 
         Photo photo = this.navItems.get(position).getPhoto();
 
@@ -82,17 +91,26 @@ public class HomeListAdapter extends BaseAdapter {
 
             ThumbnailUtils thumbnailUtils = new ThumbnailUtils();
 
-            imgIcon.setImageBitmap(thumbnailUtils.extractThumbnail(thumbnail,
-                    this.THUMBNAIL_WIDTH, this.THUMBNAIL_HEIGHT));
-
-            nameText.setText(this.navItems.get(position).getContact().getName());
-            positionText.setText(this.navItems.get(position).getContact().getPosition());
-            companyText.setText(this.navItems.get(position).getContact().getCompany());
-
-        } catch (FileNotFoundException e) {
+            homeListItemViewHolder.thumbnail.setImageBitmap(thumbnailUtils.extractThumbnail(
+                    thumbnail,
+                    this.THUMBNAIL_WIDTH,
+                    this.THUMBNAIL_HEIGHT));
+            homeListItemViewHolder.name.setText(this.navItems.get(position).getContact().getName());
+            homeListItemViewHolder.title.setText(this.navItems.get(position).getContact().getPosition());
+            homeListItemViewHolder.company.setText(this.navItems.get(position).getContact().getCompany());
+        }
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
         return convertView;
+    }
+
+    static class HomeListItemViewHolder {
+        ImageView thumbnail;
+        TextView name;
+        TextView title;
+        TextView company;
+        int position;
     }
 }

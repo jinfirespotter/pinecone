@@ -11,12 +11,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.firespotter.jinwroh.pinecone.Adapter.HomeListAdapter;
+import com.firespotter.jinwroh.pinecone.Adapter.HomeListItem;
 import com.firespotter.jinwroh.pinecone.Database.Contact;
 import com.firespotter.jinwroh.pinecone.Database.ContactDataSource;
 import com.firespotter.jinwroh.pinecone.Database.Photo;
 import com.firespotter.jinwroh.pinecone.Database.PhotoDataSource;
-import com.firespotter.jinwroh.pinecone.Adapter.HomeListAdapter;
-import com.firespotter.jinwroh.pinecone.Adapter.HomeListItem;
 import com.firespotter.jinwroh.pinecone.R;
 
 import java.io.File;
