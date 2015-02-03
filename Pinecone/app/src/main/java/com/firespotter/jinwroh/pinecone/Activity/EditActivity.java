@@ -133,6 +133,10 @@ public class EditActivity extends PhotoActivity {
                 this.delete();
                 break;
 
+            case android.R.id.home:
+                this.save();
+                super.onOptionsItemSelected(item);
+
             default:
                 return super.onOptionsItemSelected(item);
         }
