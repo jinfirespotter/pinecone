@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -39,9 +40,10 @@ public class PhotoActivity extends BaseActivity {
     public static final String JPEG_FILE_PREFIX = "IMG_";
     public static final String JPEG_FILE_SUFFIX = ".jpg";
 
-    private Photo photo;
-    private Contact contact;
+    protected Photo photo;
+    protected Contact contact;
 
+    String photoFilePath;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -73,6 +75,41 @@ public class PhotoActivity extends BaseActivity {
     }
 
 
+    /*
+        NOTE regarding onSaveInstanceState and OnRestoreInstanceState
+
+        For Samsung phones only, when the orientation is changed while using the Camera interface,
+        the activity that called the Camera is destroyed, and recreated again when the activity
+        is returned (on onActivityResult()).
+
+        This creates a slight problem since we have to update the this.photo object
+        filepath accordingly, but the photo object is destroyed when the activity is destroyed.
+
+        To circumvent this, we save the photo instance inside the Bundle instanceState on destroy,
+        and recreate it on restoreInstanceState.
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (this.photo != null) {
+            outState.putSerializable(this.PHOTO_ACTIVITY_PHOTO, this.photo);
+        }
+        if (this.contact != null) {
+            outState.putSerializable(this.PHOTO_ACTIVITY_CONTACT, this.contact);
+        }
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey(this.PHOTO_ACTIVITY_PHOTO)) {
+            this.photo = (Photo) savedInstanceState.getSerializable(this.PHOTO_ACTIVITY_PHOTO);
+        }
+        if (savedInstanceState.containsKey(this.PHOTO_ACTIVITY_CONTACT)) {
+            this.contact = (Contact) savedInstanceState.getSerializable(this.PHOTO_ACTIVITY_CONTACT);
+        }
+    }
+
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -97,6 +134,8 @@ public class PhotoActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == this.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+
+            System.out.println(this.photo.getFilepath());
 
             String savedPath = this.saveToInternalStorage(this.photo.getFilepath());
             this.photo.setFilepath(savedPath);

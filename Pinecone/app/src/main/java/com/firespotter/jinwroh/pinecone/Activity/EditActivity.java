@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.Menu;
@@ -141,28 +142,57 @@ public class EditActivity extends PhotoActivity {
 
 
     public void rescanPicture() {
-        Bitmap image = null;
-        try {
-            image = BitmapFactory.decodeStream(new FileInputStream(photo.getFilepath()));
+        new ImageScanOperation().execute(photo);
+    }
 
-            ImageReader imageReader = new ImageReader(this, image);
+    private class ImageScanOperation extends AsyncTask<Photo, String, String> {
 
-            String text = imageReader.convertImageToText();
+        protected void onPreExecute() {
+            Context context = getApplicationContext();
+            CharSequence text = "Scanning in Progress!";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+
+        protected String doInBackground(Photo... photo) {
+            Bitmap image = null;
+            String text = "";
+            try {
+                image = BitmapFactory.decodeStream(new FileInputStream(photo[0].getFilepath()));
+                ImageReader imageReader = new ImageReader(getApplicationContext(), image);
+                text = imageReader.convertImageToText();
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return text;
+        }
+
+        protected void onPostExecute(String text) {
             TextExtractor textExtractor = new TextExtractor(text);
 
             String emailString = textExtractor.extractEmail();
+            String phoneNumberString = textExtractor.extractPhoneNumber();
+
+            System.out.println(phoneNumberString);
 
             EditText editNotes = (EditText) findViewById(R.id.edit_notes);
             EditText editEmail = (EditText) findViewById(R.id.edit_email);
 
             editNotes.setText(text);
             editEmail.setText(emailString);
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
+            Context context = getApplicationContext();
+            CharSequence toastText = "Scanning Complete!";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, toastText, duration);
+            toast.show();
+        }
+
+    }
 
     public void save() {
 
@@ -251,8 +281,9 @@ public class EditActivity extends PhotoActivity {
 
     private void sendEmail() {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("application/octet-stream");
         try {
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            startActivity(Intent.createChooser(emailIntent, "Choose an Email Client:"));
             finish();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "No Email Client Installed!", Toast.LENGTH_SHORT).show();
