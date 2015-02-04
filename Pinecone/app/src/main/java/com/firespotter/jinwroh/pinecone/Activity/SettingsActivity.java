@@ -1,9 +1,12 @@
 package com.firespotter.jinwroh.pinecone.Activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.firespotter.jinwroh.pinecone.Fragment.SettingsFragment;
 import com.firespotter.jinwroh.pinecone.R;
 
 
@@ -15,6 +18,13 @@ public class SettingsActivity extends BaseDrawerActivity {
         setContentView(R.layout.activity_settings);
 
         initialiseDrawer();
+
+        FragmentManager mFragmentManager = getFragmentManager();
+        FragmentTransaction mFragmentTransaction = mFragmentManager
+                .beginTransaction();
+        SettingsFragment mPrefsFragment = new SettingsFragment();
+        mFragmentTransaction.replace(R.id.settings_frame_container, mPrefsFragment);
+        mFragmentTransaction.commit();
     }
 
 

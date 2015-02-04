@@ -19,4 +19,15 @@
         <item>@drawable/settings</item>
         <item>@drawable/about</item>
     </array>
+
+
+    <array name="entries_list_preference">
+        <item>Hello</item>
+        <item>Foo</item>
+    </array>
+    <array name="entryvalues_list_preference">
+        <item>World</item>
+        <item>Bar</item>
+    </array>
+
 </resources>

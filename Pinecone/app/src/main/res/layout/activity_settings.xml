@@ -6,17 +6,9 @@
 
     <!-- Framelayout to display Fragments -->
     <FrameLayout
-        android:id="@+id/frame_container"
+        android:id="@+id/settings_frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <TextView android:text="Settings!"
-            android:layout_width="306dp"
-            android:layout_height="306dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="20dp" />
-
     </FrameLayout>
 
     <!-- Listview to display slider menu -->
