@@ -136,8 +136,6 @@ public class BaseActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == this.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 
-            System.out.println(this.photo.getFilepath());
-
             String savedPath = this.saveToInternalStorage(this.photo.getFilepath());
             this.photo.setFilepath(savedPath);
 

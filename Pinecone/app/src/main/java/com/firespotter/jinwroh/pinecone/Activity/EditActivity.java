@@ -37,12 +37,12 @@ public class EditActivity extends BaseActivity {
     private Photo photo;
     private Contact contact;
 
-    EditText editName = (EditText) findViewById(R.id.edit_name);
-    EditText editCompany = (EditText) findViewById(R.id.edit_company);
-    EditText editPosition = (EditText) findViewById(R.id.edit_position);
-    EditText editEmail = (EditText) findViewById(R.id.edit_email);
-    EditText editPhone = (EditText) findViewById(R.id.edit_phone);
-    EditText editNotes = (EditText) findViewById(R.id.edit_notes);
+    private EditText editName;
+    private EditText editCompany;
+    private EditText editPosition;
+    private EditText editEmail;
+    private EditText editPhone;
+    private EditText editNotes;
 
 
     @Override
@@ -73,12 +73,12 @@ public class EditActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        EditText editName = (EditText) findViewById(R.id.edit_name);
-        EditText editCompany = (EditText) findViewById(R.id.edit_company);
-        EditText editPosition = (EditText) findViewById(R.id.edit_position);
-        EditText editEmail = (EditText) findViewById(R.id.edit_email);
-        EditText editPhone = (EditText) findViewById(R.id.edit_phone);
-        EditText editNotes = (EditText) findViewById(R.id.edit_notes);
+        editName = (EditText) findViewById(R.id.edit_name);
+        editCompany = (EditText) findViewById(R.id.edit_company);
+        editPosition = (EditText) findViewById(R.id.edit_position);
+        editEmail = (EditText) findViewById(R.id.edit_email);
+        editPhone = (EditText) findViewById(R.id.edit_phone);
+        editNotes = (EditText) findViewById(R.id.edit_notes);
 
         // Only scan the picture again when it's a new picture is taken.
         if (pictureTaken) {
@@ -188,9 +188,6 @@ public class EditActivity extends BaseActivity {
             String emailString = textExtractor.extractEmail();
             String phoneNumberString = textExtractor.extractPhoneNumber();
 
-            EditText editNotes = (EditText) findViewById(R.id.edit_notes);
-            EditText editEmail = (EditText) findViewById(R.id.edit_email);
-
             editNotes.setText(text);
             editEmail.setText(emailString);
 
@@ -211,20 +208,13 @@ public class EditActivity extends BaseActivity {
 
             long photoId = this.photoDataSource.updateOrInsert(photo);
 
-            EditText nameText = (EditText) findViewById(R.id.edit_name);
-            EditText companyText = (EditText) findViewById(R.id.edit_company);
-            EditText titleText = (EditText) findViewById(R.id.edit_position);
-            EditText emailText = (EditText) findViewById(R.id.edit_email);
-            EditText phoneText = (EditText) findViewById(R.id.edit_phone);
-            EditText notesText = (EditText) findViewById(R.id.edit_notes);
-
             this.contact.setPhotoId(photoId);
-            this.contact.setName(nameText.getText().toString());
-            this.contact.setEmail(emailText.getText().toString());
-            this.contact.setPhoneNumber(phoneText.getText().toString());
-            this.contact.setCompany(companyText.getText().toString());
-            this.contact.setPosition(titleText.getText().toString());
-            this.contact.setNotes(notesText.getText().toString());
+            this.contact.setName(editName.getText().toString());
+            this.contact.setEmail(editEmail.getText().toString());
+            this.contact.setPhoneNumber(editPhone.getText().toString());
+            this.contact.setCompany(editCompany.getText().toString());
+            this.contact.setPosition(editPosition.getText().toString());
+            this.contact.setNotes(editNotes.getText().toString());
 
             this.contactDataSource.updateOrInsert(this.contact);
 
