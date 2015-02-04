@@ -118,8 +118,8 @@ public class HomeActivity extends BaseDrawerActivity {
                 Photo photo = homeListItemList.get(position).getPhoto();
                 Contact contact = homeListItemList.get(position).getContact();
 
-                intent.putExtra(PhotoActivity.PHOTO_ACTIVITY_PHOTO, photo);
-                intent.putExtra(PhotoActivity.PHOTO_ACTIVITY_CONTACT, contact);
+                intent.putExtra(BaseActivity.PHOTO_ACTIVITY_PHOTO, photo);
+                intent.putExtra(BaseActivity.PHOTO_ACTIVITY_CONTACT, contact);
 
                 startActivity(intent);
             }

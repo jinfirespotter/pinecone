@@ -17,7 +17,6 @@ import com.firespotter.jinwroh.pinecone.Adapter.NavDrawerListAdapter;
 import com.firespotter.jinwroh.pinecone.R;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * Deals with the sidebar drawer (sidebar menu) functionality.
@@ -25,7 +24,7 @@ import java.util.Set;
  * 
  * Created by jinroh on 1/30/15.
  */
-public class BaseDrawerActivity extends PhotoActivity {
+public class BaseDrawerActivity extends BaseActivity {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;

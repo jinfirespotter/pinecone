@@ -29,13 +29,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
-public class EditActivity extends PhotoActivity {
+public class EditActivity extends BaseActivity {
 
     PhotoDataSource photoDataSource;
     ContactDataSource contactDataSource;
 
     private Photo photo;
     private Contact contact;
+
+    EditText editName = (EditText) findViewById(R.id.edit_name);
+    EditText editCompany = (EditText) findViewById(R.id.edit_company);
+    EditText editPosition = (EditText) findViewById(R.id.edit_position);
+    EditText editEmail = (EditText) findViewById(R.id.edit_email);
+    EditText editPhone = (EditText) findViewById(R.id.edit_phone);
+    EditText editNotes = (EditText) findViewById(R.id.edit_notes);
 
 
     @Override
@@ -50,12 +57,12 @@ public class EditActivity extends PhotoActivity {
 
         Intent intent = getIntent();
 
-        this.photo = (Photo) intent.getSerializableExtra(PhotoActivity.PHOTO_ACTIVITY_PHOTO);
-        this.contact = (Contact) intent.getSerializableExtra(PhotoActivity.PHOTO_ACTIVITY_CONTACT);
+        this.photo = (Photo) intent.getSerializableExtra(BaseActivity.PHOTO_ACTIVITY_PHOTO);
+        this.contact = (Contact) intent.getSerializableExtra(BaseActivity.PHOTO_ACTIVITY_CONTACT);
 
         // Has the picture been taken? If true, it's a new card
         // If false, we're just editing an existing card.
-        Boolean pictureTaken = intent.getBooleanExtra(PhotoActivity.PHOTO_ACTIVITY_FIRST, false);
+        Boolean pictureTaken = intent.getBooleanExtra(BaseActivity.PHOTO_ACTIVITY_FIRST, false);
 
         Bitmap image = null;
         try {
