@@ -30,13 +30,13 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return this.navDrawerItems.size();
+        return navDrawerItems.size();
     }
 
 
     @Override
     public Object getItem(int position) {
-        return this.navDrawerItems.get(position);
+        return navDrawerItems.get(position);
     }
 
 
@@ -50,15 +50,15 @@ public class NavDrawerListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater)
-                    this.context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                    context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.drawer_list_item, null);
         }
 
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
 
-        imgIcon.setImageResource(this.navDrawerItems.get(position).getIcon());
-        txtTitle.setText(this.navDrawerItems.get(position).getTitle());
+        imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
+        txtTitle.setText(navDrawerItems.get(position).getTitle());
 
         return convertView;
     }

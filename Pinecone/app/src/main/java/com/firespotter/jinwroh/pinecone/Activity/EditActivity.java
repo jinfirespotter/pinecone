@@ -52,8 +52,8 @@ public class EditActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        this.photoDataSource = new PhotoDataSource(this);
-        this.contactDataSource = new ContactDataSource(this);
+        photoDataSource = new PhotoDataSource(this);
+        contactDataSource = new ContactDataSource(this);
 
         context = getApplicationContext();
 
@@ -61,8 +61,8 @@ public class EditActivity extends BaseActivity {
 
         Intent intent = getIntent();
 
-        this.photo = (Photo) intent.getSerializableExtra(BaseActivity.PHOTO_ACTIVITY_PHOTO);
-        this.contact = (Contact) intent.getSerializableExtra(BaseActivity.PHOTO_ACTIVITY_CONTACT);
+        photo = (Photo) intent.getSerializableExtra(BaseActivity.PHOTO_ACTIVITY_PHOTO);
+        contact = (Contact) intent.getSerializableExtra(BaseActivity.PHOTO_ACTIVITY_CONTACT);
 
         // Has the picture been taken? If true, it's a new card
         // If false, we're just editing an existing card.
@@ -70,7 +70,7 @@ public class EditActivity extends BaseActivity {
 
         Bitmap image = null;
         try {
-            image = BitmapFactory.decodeStream(new FileInputStream(this.photo.getFilepath()));
+            image = BitmapFactory.decodeStream(new FileInputStream(photo.getFilepath()));
             ImageView img = (ImageView) findViewById(R.id.edit_photo);
             img.setImageBitmap(image);
         } catch (FileNotFoundException e) {
@@ -89,12 +89,12 @@ public class EditActivity extends BaseActivity {
             rescanPicture();
         }
         else {
-            editName.setText(this.contact.getName());
-            editCompany.setText(this.contact.getCompany());
-            editPosition.setText(this.contact.getPosition());
-            editEmail.setText(this.contact.getEmail());
-            editPhone.setText(this.contact.getPhoneNumber());
-            editNotes.setText(this.contact.getNotes());
+            editName.setText(contact.getName());
+            editCompany.setText(contact.getCompany());
+            editPosition.setText(contact.getPosition());
+            editEmail.setText(contact.getEmail());
+            editPhone.setText(contact.getPhoneNumber());
+            editNotes.setText(contact.getNotes());
         }
     }
 
@@ -118,35 +118,35 @@ public class EditActivity extends BaseActivity {
 
         switch (id) {
             case R.id.action_save:
-                this.save();
+                save();
                 break;
 
             case R.id.action_rescan_picture:
-                this.rescanPicture();
+                rescanPicture();
                 break;
 
             case R.id.action_add_to_contacts:
-                this.addToContacts();
+                addToContacts();
                 break;
 
             case R.id.action_save_to_gallery:
-                this.savePictureToGallery(this.photo.getFilepath());
+                savePictureToGallery(photo.getFilepath());
                 break;
 
             case R.id.action_retake_picture:
-                super.retakePicture(this.photo, this.contact);
+                super.retakePicture(photo, contact);
                 break;
 
             case R.id.action_send_email:
-                this.sendEmail();
+                sendEmail();
                 break;
 
             case R.id.action_delete:
-                this.delete();
+                delete();
                 break;
 
             case android.R.id.home:
-                this.save();
+                save();
                 super.onOptionsItemSelected(item);
 
             default:
@@ -205,23 +205,23 @@ public class EditActivity extends BaseActivity {
 
     public void save() {
         try {
-            this.photoDataSource.open();
-            this.contactDataSource.open();
+            photoDataSource.open();
+            contactDataSource.open();
 
-            long photoId = this.photoDataSource.updateOrInsert(photo);
+            long photoId = photoDataSource.updateOrInsert(photo);
 
-            this.contact.setPhotoId(photoId);
-            this.contact.setName(editName.getText().toString());
-            this.contact.setEmail(editEmail.getText().toString());
-            this.contact.setPhoneNumber(editPhone.getText().toString());
-            this.contact.setCompany(editCompany.getText().toString());
-            this.contact.setPosition(editPosition.getText().toString());
-            this.contact.setNotes(editNotes.getText().toString());
+            contact.setPhotoId(photoId);
+            contact.setName(editName.getText().toString());
+            contact.setEmail(editEmail.getText().toString());
+            contact.setPhoneNumber(editPhone.getText().toString());
+            contact.setCompany(editCompany.getText().toString());
+            contact.setPosition(editPosition.getText().toString());
+            contact.setNotes(editNotes.getText().toString());
 
-            this.contactDataSource.updateOrInsert(this.contact);
+            contactDataSource.updateOrInsert(contact);
 
-            this.photoDataSource.close();
-            this.contactDataSource.close();
+            photoDataSource.close();
+            contactDataSource.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -231,7 +231,7 @@ public class EditActivity extends BaseActivity {
         boolean shouldSaveToGallery = preferences.getBoolean("preference_autosave_to_gallery", false);
 
         if (shouldSaveToGallery) {
-            this.savePictureToGallery(this.photo.getFilepath());
+            savePictureToGallery(photo.getFilepath());
         }
 
         CharSequence text = "Saved Successfully!";
@@ -244,14 +244,14 @@ public class EditActivity extends BaseActivity {
 
     public void delete() {
         try {
-            this.photoDataSource.open();
-            this.contactDataSource.open();
+            photoDataSource.open();
+            contactDataSource.open();
 
-            this.photoDataSource.deletePhoto(photo);
-            this.contactDataSource.deleteContact(contact);
+            photoDataSource.deletePhoto(photo);
+            contactDataSource.deleteContact(contact);
 
-            this.photoDataSource.close();
-            this.contactDataSource.close();
+            photoDataSource.close();
+            contactDataSource.close();
 
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
@@ -266,12 +266,12 @@ public class EditActivity extends BaseActivity {
         Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
         intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 
-        intent.putExtra(ContactsContract.Intents.Insert.NAME, this.contact.getName());
-        intent.putExtra(ContactsContract.Intents.Insert.PHONE, this.contact.getPhoneNumber());
-        intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, this.contact.getPosition());
-        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, this.contact.getEmail());
-        intent.putExtra(ContactsContract.Intents.Insert.COMPANY, this.contact.getCompany());
-        intent.putExtra(ContactsContract.Intents.Insert.NOTES, this.contact.getNotes());
+        intent.putExtra(ContactsContract.Intents.Insert.NAME, contact.getName());
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, contact.getPhoneNumber());
+        intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, contact.getPosition());
+        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, contact.getEmail());
+        intent.putExtra(ContactsContract.Intents.Insert.COMPANY, contact.getCompany());
+        intent.putExtra(ContactsContract.Intents.Insert.NOTES, contact.getNotes());
 
         startActivity(intent);
     }
@@ -282,7 +282,7 @@ public class EditActivity extends BaseActivity {
         File file = new File(path);
         Uri contentUri = Uri.fromFile(file);
         mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
+        sendBroadcast(mediaScanIntent);
     }
 
 

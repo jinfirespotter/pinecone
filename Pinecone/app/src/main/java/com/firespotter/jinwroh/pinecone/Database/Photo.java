@@ -12,7 +12,7 @@ public class Photo implements Serializable{
 
     public Photo() { }
 
-    public Photo (String filepath) {
+    public Photo(String filepath) {
        this.filepath = filepath;
     }
 
@@ -26,7 +26,7 @@ public class Photo implements Serializable{
     }
 
     public String getFilepath() {
-        return this.filepath;
+        return filepath;
     }
 
     public void setFilepath(String filepath) {

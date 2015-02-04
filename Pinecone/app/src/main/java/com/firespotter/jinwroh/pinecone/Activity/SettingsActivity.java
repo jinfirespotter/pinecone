@@ -20,8 +20,7 @@ public class SettingsActivity extends BaseDrawerActivity {
         initialiseDrawer();
 
         FragmentManager mFragmentManager = getFragmentManager();
-        FragmentTransaction mFragmentTransaction = mFragmentManager
-                .beginTransaction();
+        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
         SettingsFragment mPrefsFragment = new SettingsFragment();
         mFragmentTransaction.replace(R.id.settings_frame_container, mPrefsFragment);
         mFragmentTransaction.commit();

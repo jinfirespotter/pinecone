@@ -39,13 +39,13 @@ public class HomeListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return this.navItems.size();
+        return navItems.size();
     }
 
 
     @Override
     public Object getItem(int position) {
-        return this.navItems.get(position);
+        return navItems.get(position);
     }
 
 
@@ -62,7 +62,7 @@ public class HomeListAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater mInflater =
-                    (LayoutInflater) this.context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                    (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.home_list_item, null);
 
             homeListItemViewHolder = new HomeListItemViewHolder();
@@ -83,7 +83,7 @@ public class HomeListAdapter extends BaseAdapter {
         convertView.setFocusable(false);
         convertView.setClickable(false);
 
-        Photo photo = this.navItems.get(position).getPhoto();
+        Photo photo = navItems.get(position).getPhoto();
 
         File file = new File(photo.getFilepath());
         try {
@@ -93,11 +93,11 @@ public class HomeListAdapter extends BaseAdapter {
 
             homeListItemViewHolder.thumbnail.setImageBitmap(thumbnailUtils.extractThumbnail(
                     thumbnail,
-                    this.THUMBNAIL_WIDTH,
-                    this.THUMBNAIL_HEIGHT));
-            homeListItemViewHolder.name.setText(this.navItems.get(position).getContact().getName());
-            homeListItemViewHolder.title.setText(this.navItems.get(position).getContact().getPosition());
-            homeListItemViewHolder.company.setText(this.navItems.get(position).getContact().getCompany());
+                    THUMBNAIL_WIDTH,
+                    THUMBNAIL_HEIGHT));
+            homeListItemViewHolder.name.setText(navItems.get(position).getContact().getName());
+            homeListItemViewHolder.title.setText(navItems.get(position).getContact().getPosition());
+            homeListItemViewHolder.company.setText(navItems.get(position).getContact().getCompany());
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();

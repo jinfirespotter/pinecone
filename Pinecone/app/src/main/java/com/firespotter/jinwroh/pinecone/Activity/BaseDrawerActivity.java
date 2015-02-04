@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * 
  * Created by jinroh on 1/30/15.
  */
-public class BaseDrawerActivity extends BaseActivity {
+public abstract class BaseDrawerActivity extends BaseActivity {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;

@@ -39,14 +39,14 @@ public class HomeActivity extends BaseDrawerActivity {
         context = getApplicationContext();
 
         // For testing purposes
-        this.initializeSamples();
+        initializeSamples();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         super.initialiseDrawer();
 
-        this.initializeListView();
+        initializeListView();
     }
 
 

@@ -19,12 +19,12 @@ public class TextExtractor {
     }
 
     public String getContent() {
-        return this.content;
+        return content;
     }
 
     public String extractEmail() {
         Pattern pattern = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+");
-        Matcher matcher = pattern.matcher(this.content);
+        Matcher matcher = pattern.matcher(content);
 
         while (matcher.find()) {
             System.out.println(matcher.group());
@@ -36,7 +36,7 @@ public class TextExtractor {
     // TODO:
     public String extractPhoneNumber() {
         Pattern pattern = Pattern.compile("^[a-zA-Z]+([0-9]+).*");
-        Matcher matcher = pattern.matcher(this.content);
+        Matcher matcher = pattern.matcher(content);
 
         if (matcher.find()) {
             System.out.println(matcher.group(1));

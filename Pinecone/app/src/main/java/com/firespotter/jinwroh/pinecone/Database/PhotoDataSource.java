@@ -29,17 +29,17 @@ public class PhotoDataSource {
 
     public PhotoDataSource(Context context) {
         this.context = context;
-        this.databaseHelper = new DatabaseHelper(context);
+        databaseHelper = new DatabaseHelper(context);
     }
 
 
     public void open() throws SQLException {
-        this.database = this.databaseHelper.getWritableDatabase();
+        database = databaseHelper.getWritableDatabase();
     }
 
 
     public void close() {
-        this.databaseHelper.close();
+        databaseHelper.close();
     }
 
 
@@ -48,7 +48,7 @@ public class PhotoDataSource {
 
         values.put(DatabaseContract.photo.KEY_FILEPATH, photo.getFilepath());
 
-        long insertId = this.database.insert(DatabaseContract.photo.TABLE_NAME, null, values);
+        long insertId = database.insert(DatabaseContract.photo.TABLE_NAME, null, values);
 
         return insertId;
     }
@@ -58,7 +58,7 @@ public class PhotoDataSource {
         ContentValues values = new ContentValues();
 
         values.put(DatabaseContract.photo.KEY_FILEPATH, photo.getFilepath());
-        this.database.update(DatabaseContract.photo.TABLE_NAME,
+        database.update(DatabaseContract.photo.TABLE_NAME,
                 values,
                 DatabaseContract.photo._ID + " = " + photo.getId(),
                 null);
@@ -82,13 +82,13 @@ public class PhotoDataSource {
         File photoFile = new File(photo.getFilepath());
         photoFile.delete();
 
-        return this.database.delete(DatabaseContract.photo.TABLE_NAME,
+        return database.delete(DatabaseContract.photo.TABLE_NAME,
                 DatabaseContract.photo._ID + " = " + photo.getId(), null) > 0;
     }
 
 
     public Photo retrievePhoto(long id) {
-        Cursor cursor = this.database.query(DatabaseContract.photo.TABLE_NAME,
+        Cursor cursor = database.query(DatabaseContract.photo.TABLE_NAME,
                 DatabaseContract.photo.KEY_ARRAY,
                 DatabaseContract.photo._ID + " = " + id,
                 null, null, null, null);
@@ -106,7 +106,7 @@ public class PhotoDataSource {
 
 
     public void deleteAll() {
-        this.database.execSQL("delete from " + DatabaseContract.contact.TABLE_NAME);
+        database.execSQL("delete from " + DatabaseContract.contact.TABLE_NAME);
 
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
@@ -120,7 +120,7 @@ public class PhotoDataSource {
     public List<Photo> getAllPhotos() {
         List<Photo> photos = new ArrayList<Photo>();
 
-        Cursor cursor = this.database.query(DatabaseContract.photo.TABLE_NAME,
+        Cursor cursor = database.query(DatabaseContract.photo.TABLE_NAME,
                 DatabaseContract.photo.KEY_ARRAY, null, null, null, null, null);
 
         cursor.moveToFirst();

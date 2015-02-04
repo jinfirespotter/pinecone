@@ -30,7 +30,7 @@ import java.util.Date;
 /**
  * Created by jinroh on 1/30/15.
  */
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 
     static final int REQUEST_TAKE_PHOTO = 100;
 
@@ -51,7 +51,7 @@ public class BaseActivity extends Activity {
         int id = item.getItemId();
 
         if (id == R.id.action_picture) {
-            this.takeNewPicture();
+            takeNewPicture();
         }
         else {
             return super.onOptionsItemSelected(item);
@@ -61,10 +61,10 @@ public class BaseActivity extends Activity {
 
 
     public void takeNewPicture() {
-        this.photo = new Photo();
-        this.contact = new Contact();
+        photo = new Photo();
+        contact = new Contact();
 
-        this.dispatchTakePictureIntent();
+        dispatchTakePictureIntent();
     }
 
 
@@ -72,7 +72,7 @@ public class BaseActivity extends Activity {
         this.photo = photo;
         this.contact = contact;
 
-        this.dispatchTakePictureIntent();
+        dispatchTakePictureIntent();
     }
 
 
@@ -92,21 +92,23 @@ public class BaseActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (this.photo != null) {
-            outState.putSerializable(this.PHOTO_ACTIVITY_PHOTO, this.photo);
+        if (photo != null) {
+            outState.putSerializable(PHOTO_ACTIVITY_PHOTO, photo);
         }
-        if (this.contact != null) {
-            outState.putSerializable(this.PHOTO_ACTIVITY_CONTACT, this.contact);
+        if (contact != null) {
+            outState.putSerializable(PHOTO_ACTIVITY_CONTACT, contact);
         }
     }
+
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState.containsKey(this.PHOTO_ACTIVITY_PHOTO)) {
-            this.photo = (Photo) savedInstanceState.getSerializable(this.PHOTO_ACTIVITY_PHOTO);
+        if (savedInstanceState.containsKey(PHOTO_ACTIVITY_PHOTO)) {
+            photo = (Photo) savedInstanceState.getSerializable(PHOTO_ACTIVITY_PHOTO);
         }
-        if (savedInstanceState.containsKey(this.PHOTO_ACTIVITY_CONTACT)) {
-            this.contact = (Contact) savedInstanceState.getSerializable(this.PHOTO_ACTIVITY_CONTACT);
+        if (savedInstanceState.containsKey(PHOTO_ACTIVITY_CONTACT)) {
+            contact = (Contact) savedInstanceState.getSerializable(PHOTO_ACTIVITY_CONTACT);
         }
     }
 
@@ -124,9 +126,9 @@ public class BaseActivity extends Activity {
             }
 
             if (photoFile != null) {
-                this.photo.setFilepath(photoFile.getAbsolutePath());
+                photo.setFilepath(photoFile.getAbsolutePath());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, this.REQUEST_TAKE_PHOTO);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }
@@ -134,16 +136,16 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == this.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 
-            String savedPath = this.saveToInternalStorage(this.photo.getFilepath());
-            this.photo.setFilepath(savedPath);
+            String savedPath = saveToInternalStorage(photo.getFilepath());
+            photo.setFilepath(savedPath);
 
             Intent intent = new Intent(this, EditActivity.class);
 
-            intent.putExtra(this.PHOTO_ACTIVITY_FIRST, true);
-            intent.putExtra(this.PHOTO_ACTIVITY_PHOTO, photo);
-            intent.putExtra(this.PHOTO_ACTIVITY_CONTACT, contact);
+            intent.putExtra(PHOTO_ACTIVITY_FIRST, true);
+            intent.putExtra(PHOTO_ACTIVITY_PHOTO, photo);
+            intent.putExtra(PHOTO_ACTIVITY_CONTACT, contact);
 
             startActivity(intent);
         }
@@ -152,9 +154,9 @@ public class BaseActivity extends Activity {
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = this.JPEG_FILE_PREFIX + timeStamp + "_";
+        String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
         File album = getAlbumDir();
-        File image = File.createTempFile(imageFileName, this.JPEG_FILE_SUFFIX, album);
+        File image = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, album);
         return image;
     }
 

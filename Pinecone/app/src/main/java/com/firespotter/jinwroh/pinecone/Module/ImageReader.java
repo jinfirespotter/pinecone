@@ -36,17 +36,17 @@ public class ImageReader {
     public ImageReader(Context context, Bitmap bitmap) {
         this.context = context;
         this.bitmap = bitmap;
-        this.initialize();
+        initialize();
 
-        this.tess = new TessBaseAPI();
+        tess = new TessBaseAPI();
     }
 
 
     private void initialize() {
 
-        this.destinationDirectory = Environment.getExternalStorageDirectory().toString() + "/pinecone/";
+        destinationDirectory = Environment.getExternalStorageDirectory().toString() + "/pinecone/";
 
-        String[] paths = new String[]{ this.destinationDirectory, this.destinationDirectory + "tessdata/"};
+        String[] paths = new String[]{ destinationDirectory, destinationDirectory + "tessdata/"};
 
         for (String path : paths) {
             File dir = new File(path);
@@ -57,12 +57,12 @@ public class ImageReader {
             }
         }
 
-        String destDir = this.destinationDirectory + "tessdata/" + this.LANG + ".traineddata";
+        String destDir = destinationDirectory + "tessdata/" + LANG + ".traineddata";
 
         if (!(new File(destDir)).exists()) {
             try {
-                AssetManager assetManager = this.context.getAssets();
-                InputStream in = assetManager.open("tessdata/" + this.LANG + ".traineddata");
+                AssetManager assetManager = context.getAssets();
+                InputStream in = assetManager.open("tessdata/" + LANG + ".traineddata");
                 OutputStream out = new FileOutputStream(destDir);
 
                 byte[] buf = new byte[1024];
@@ -83,19 +83,19 @@ public class ImageReader {
 
 
     public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+        bitmap = bitmap;
     }
 
 
     public Bitmap getBitmap() {
-        return this.bitmap;
+        return bitmap;
     }
 
 
     public String convertImageToText() {
-        this.tess.setDebug(true);
-        this.tess.init(this.destinationDirectory, LANG);
-        this.tess.setImage(this.bitmap);
-        return this.tess.getUTF8Text();
+        tess.setDebug(true);
+        tess.init(destinationDirectory, LANG);
+        tess.setImage(bitmap);
+        return tess.getUTF8Text();
     }
 }
