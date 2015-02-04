@@ -34,6 +34,8 @@ public class EditActivity extends BaseActivity {
     PhotoDataSource photoDataSource;
     ContactDataSource contactDataSource;
 
+    private Context context;
+
     private Photo photo;
     private Contact contact;
 
@@ -52,6 +54,8 @@ public class EditActivity extends BaseActivity {
 
         this.photoDataSource = new PhotoDataSource(this);
         this.contactDataSource = new ContactDataSource(this);
+
+        context = getApplicationContext();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -160,7 +164,6 @@ public class EditActivity extends BaseActivity {
     private class ImageScanOperation extends AsyncTask<Photo, String, String> {
 
         protected void onPreExecute() {
-            Context context = getApplicationContext();
             CharSequence text = "Scanning in Progress!";
             int duration = Toast.LENGTH_SHORT;
 
@@ -173,7 +176,7 @@ public class EditActivity extends BaseActivity {
             String text = "";
             try {
                 image = BitmapFactory.decodeStream(new FileInputStream(photo[0].getFilepath()));
-                ImageReader imageReader = new ImageReader(getApplicationContext(), image);
+                ImageReader imageReader = new ImageReader(context, image);
                 text = imageReader.convertImageToText();
             }
             catch (FileNotFoundException e) {
@@ -191,7 +194,6 @@ public class EditActivity extends BaseActivity {
             editNotes.setText(text);
             editEmail.setText(emailString);
 
-            Context context = getApplicationContext();
             CharSequence toastText = "Scanning Complete!";
             int duration = Toast.LENGTH_SHORT;
 
@@ -232,7 +234,6 @@ public class EditActivity extends BaseActivity {
             this.savePictureToGallery(this.photo.getFilepath());
         }
 
-        Context context = getApplicationContext();
         CharSequence text = "Saved Successfully!";
         int duration = Toast.LENGTH_SHORT;
 

@@ -31,8 +31,12 @@ import java.util.List;
 
 public class HomeActivity extends BaseDrawerActivity {
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        context = getApplicationContext();
 
         // For testing purposes
         this.initializeSamples();
@@ -108,12 +112,12 @@ public class HomeActivity extends BaseDrawerActivity {
             }
         }
 
-        HomeListAdapter homeAdapter = new HomeListAdapter(getApplicationContext(), homeListItemList);
+        HomeListAdapter homeAdapter = new HomeListAdapter(context, homeListItemList);
         homeList.setAdapter(homeAdapter);
 
         homeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), EditActivity.class);
+                Intent intent = new Intent(context, EditActivity.class);
 
                 Photo photo = homeListItemList.get(position).getPhoto();
                 Contact contact = homeListItemList.get(position).getContact();
@@ -135,7 +139,7 @@ public class HomeActivity extends BaseDrawerActivity {
         String[] sampleFiles = {"card1.jpg", "card2.png", "card3.jpg"};
 
         try {
-            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            ContextWrapper cw = new ContextWrapper(context);
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
 
            for (String s : sampleFiles) {
