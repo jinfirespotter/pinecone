@@ -2,11 +2,13 @@ package com.firespotter.jinwroh.pinecone.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -179,8 +181,6 @@ public class EditActivity extends PhotoActivity {
             String emailString = textExtractor.extractEmail();
             String phoneNumberString = textExtractor.extractPhoneNumber();
 
-            System.out.println(phoneNumberString);
-
             EditText editNotes = (EditText) findViewById(R.id.edit_notes);
             EditText editEmail = (EditText) findViewById(R.id.edit_email);
 
@@ -226,6 +226,13 @@ public class EditActivity extends PhotoActivity {
         }
         catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean shouldSaveToGallery = preferences.getBoolean("preference_autosave_to_gallery", false);
+
+        if (shouldSaveToGallery) {
+            this.savePictureToGallery(this.photo.getFilepath());
         }
 
         Context context = getApplicationContext();
