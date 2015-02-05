@@ -41,10 +41,19 @@ public abstract class BaseActivity extends Activity {
     public static final String JPEG_FILE_PREFIX = "IMG_";
     public static final String JPEG_FILE_SUFFIX = ".jpg";
 
+    protected Context context;
+
     protected Photo photo;
     protected Contact contact;
 
     String photoFilePath;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getApplicationContext();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

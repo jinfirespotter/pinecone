@@ -31,18 +31,13 @@ import java.util.List;
 
 public class HomeActivity extends BaseDrawerActivity {
 
-    private Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        context = getApplicationContext();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
 
         // For testing purposes
         initializeSamples();
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
 
         super.initialiseDrawer();
 
@@ -179,8 +174,7 @@ public class HomeActivity extends BaseDrawerActivity {
                    contactDataSource.close();
                }
            }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();

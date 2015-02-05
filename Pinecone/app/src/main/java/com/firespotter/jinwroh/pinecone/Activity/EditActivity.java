@@ -31,10 +31,8 @@ import java.sql.SQLException;
 
 public class EditActivity extends BaseActivity {
 
-    PhotoDataSource photoDataSource;
-    ContactDataSource contactDataSource;
-
-    private Context context;
+    private PhotoDataSource photoDataSource;
+    private ContactDataSource contactDataSource;
 
     private Photo photo;
     private Contact contact;
@@ -54,8 +52,6 @@ public class EditActivity extends BaseActivity {
 
         photoDataSource = new PhotoDataSource(this);
         contactDataSource = new ContactDataSource(this);
-
-        context = getApplicationContext();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -87,8 +83,7 @@ public class EditActivity extends BaseActivity {
         // Only scan the picture again when it's a new picture is taken.
         if (pictureTaken) {
             rescanPicture();
-        }
-        else {
+        } else {
             editName.setText(contact.getName());
             editCompany.setText(contact.getCompany());
             editPosition.setText(contact.getPosition());
@@ -178,8 +173,7 @@ public class EditActivity extends BaseActivity {
                 image = BitmapFactory.decodeStream(new FileInputStream(photo[0].getFilepath()));
                 ImageReader imageReader = new ImageReader(context, image);
                 text = imageReader.convertImageToText();
-            }
-            catch (FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
             return text;
@@ -193,6 +187,7 @@ public class EditActivity extends BaseActivity {
 
             editNotes.setText(text);
             editEmail.setText(emailString);
+            editPhone.setText(phoneNumberString);
 
             CharSequence toastText = "Scanning Complete!";
             int duration = Toast.LENGTH_SHORT;
@@ -222,8 +217,7 @@ public class EditActivity extends BaseActivity {
 
             photoDataSource.close();
             contactDataSource.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -252,13 +246,12 @@ public class EditActivity extends BaseActivity {
 
             photoDataSource.close();
             contactDataSource.close();
-
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
 
@@ -293,8 +286,7 @@ public class EditActivity extends BaseActivity {
         try {
             startActivity(Intent.createChooser(emailIntent, "Choose an Email Client:"));
             finish();
-        }
-        catch (android.content.ActivityNotFoundException ex) {
+        } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "No Email Client Installed!", Toast.LENGTH_SHORT).show();
         }
     }

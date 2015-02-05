@@ -72,8 +72,7 @@ public class HomeListAdapter extends BaseAdapter {
             homeListItemViewHolder.company = (TextView) convertView.findViewById(R.id.company);
 
             convertView.setTag(homeListItemViewHolder);
-        }
-        else {
+        } else {
             homeListItemViewHolder = (HomeListItemViewHolder) convertView.getTag();
         }
 
@@ -98,8 +97,7 @@ public class HomeListAdapter extends BaseAdapter {
             homeListItemViewHolder.name.setText(navItems.get(position).getContact().getName());
             homeListItemViewHolder.title.setText(navItems.get(position).getContact().getPosition());
             homeListItemViewHolder.company.setText(navItems.get(position).getContact().getCompany());
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 

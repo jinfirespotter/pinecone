@@ -57,8 +57,7 @@ public class ContactDataSource {
 
         if (retrieveContact(contact.getId()) == null) {
             return createContact(contact);
-        }
-        else {
+        } else {
             return updateContact(contact);
         }
     }

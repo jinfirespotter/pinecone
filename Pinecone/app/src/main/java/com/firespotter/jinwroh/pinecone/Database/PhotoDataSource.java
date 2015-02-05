@@ -70,8 +70,7 @@ public class PhotoDataSource {
     public long updateOrInsert(Photo photo) {
         if (retrievePhoto(photo.getId()) == null) {
             return createPhoto(photo);
-        }
-        else {
+        } else {
             return updatePhoto(photo);
         }
     }
