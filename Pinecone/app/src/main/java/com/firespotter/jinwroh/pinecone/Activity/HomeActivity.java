@@ -1,5 +1,6 @@
 package com.firespotter.jinwroh.pinecone.Activity;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.firespotter.jinwroh.pinecone.Adapter.HomeListAdapter;
 import com.firespotter.jinwroh.pinecone.Adapter.HomeListItem;
@@ -30,9 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeActivity extends BaseDrawerActivity {
+public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQueryTextListener {
 
     private DatabaseHelper mDatabaseHelper;
+    private HomeListAdapter mHomeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +44,8 @@ public class HomeActivity extends BaseDrawerActivity {
 
         // For testing purposes
         initializeSamples();
-
         super.initialiseDrawer();
+
 
         initializeListView();
     }
@@ -63,8 +66,29 @@ public class HomeActivity extends BaseDrawerActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(false);
+        searchView.setOnQueryTextListener(this);
+
         return true;
     }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mHomeAdapter.filter(newText);
+        return true;
+    }
+
 
 
     @Override
@@ -111,8 +135,8 @@ public class HomeActivity extends BaseDrawerActivity {
             }
         }
 
-        HomeListAdapter homeAdapter = new HomeListAdapter(context, homeListItemList);
-        homeList.setAdapter(homeAdapter);
+        mHomeAdapter = new HomeListAdapter(context, homeListItemList);
+        homeList.setAdapter(mHomeAdapter);
 
         homeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

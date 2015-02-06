@@ -18,6 +18,7 @@ import com.firespotter.jinwroh.pinecone.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ public class HomeListAdapter extends BaseAdapter {
 
     private Context context;
     private List<HomeListItem> navItems;
+    private List<HomeListItem> navItemsCopy;
 
     private static final int THUMBNAIL_WIDTH = 120;
     private static final int THUMBNAIL_HEIGHT = 80;
@@ -34,6 +36,8 @@ public class HomeListAdapter extends BaseAdapter {
     public HomeListAdapter(Context context, List<HomeListItem> navItems) {
         this.context = context;
         this.navItems = navItems;
+        navItemsCopy = new ArrayList<HomeListItem>();
+        navItemsCopy.addAll(navItems);
     }
 
 
@@ -103,6 +107,27 @@ public class HomeListAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+
+    public void filter(String filterText) {
+        filterText = filterText.toLowerCase().trim();
+
+        navItems.clear();
+        if (filterText.length() != 0) {
+            for (HomeListItem photoContactPair : navItemsCopy) {
+                String infoString = photoContactPair.getContact().toString().toLowerCase();
+                System.out.println(filterText + " " + infoString);
+                if (infoString.contains(filterText)) {
+                    navItems.add(photoContactPair);
+                }
+            }
+            notifyDataSetChanged();
+        }
+        else {
+            navItems.addAll(navItemsCopy);
+        }
+    }
+
 
     static class HomeListItemViewHolder {
         ImageView thumbnail;

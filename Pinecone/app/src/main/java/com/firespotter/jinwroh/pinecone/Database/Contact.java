@@ -36,6 +36,8 @@ public class Contact implements Serializable{
     @DatabaseField
     private String notes;
 
+    private String infoString;
+
     public Contact() { }
 
     public Contact(long id, Photo photo) {
@@ -98,4 +100,10 @@ public class Contact implements Serializable{
     public String getNotes() { return notes; }
 
     public void setNotes(String notes) { this.notes = notes; }
+
+    // This string is used during filtering.
+    @Override
+    public String toString() {
+        return name + " " + email + " " + phoneNumber + " " + company + " " + position;
+    }
 }
