@@ -37,6 +37,9 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
     private DatabaseHelper mDatabaseHelper;
     private HomeListAdapter mHomeAdapter;
 
+    private SearchView mSearchView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,22 +47,18 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
 
         // For testing purposes
         initializeSamples();
+
         super.initialiseDrawer();
+    }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         initializeListView();
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
+        if (mSearchView != null) {
+            onQueryTextChange(mSearchView.getQuery().toString());
+        }
     }
 
 
@@ -68,11 +67,11 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
         getMenuInflater().inflate(R.menu.menu_home, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setSubmitButtonEnabled(false);
-        searchView.setOnQueryTextListener(this);
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        mSearchView.setSubmitButtonEnabled(false);
+        mSearchView.setOnQueryTextListener(this);
 
         return true;
     }
@@ -83,12 +82,12 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
         return false;
     }
 
+
     @Override
     public boolean onQueryTextChange(String newText) {
         mHomeAdapter.filter(newText);
         return true;
     }
-
 
 
     @Override

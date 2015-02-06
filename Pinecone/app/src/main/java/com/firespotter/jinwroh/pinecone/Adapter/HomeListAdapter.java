@@ -116,7 +116,6 @@ public class HomeListAdapter extends BaseAdapter {
         if (filterText.length() != 0) {
             for (HomeListItem photoContactPair : navItemsCopy) {
                 String infoString = photoContactPair.getContact().toString().toLowerCase();
-                System.out.println(filterText + " " + infoString);
                 if (infoString.contains(filterText)) {
                     navItems.add(photoContactPair);
                 }
