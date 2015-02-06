@@ -1,38 +1,58 @@
 package com.firespotter.jinwroh.pinecone.Database;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
 /**
  * Created by jinroh on 1/28/15.
  */
+
+@DatabaseTable
 public class Contact implements Serializable{
 
+    @DatabaseField(index = true, unique = true, generatedId = true)
     private long id;
-    private long photoId;
+
+    @DatabaseField (foreign = true)
+    private Photo photo;
+
+    @DatabaseField
     private String name;
+
+    @DatabaseField
     private String email;
+
+    @DatabaseField
     private String phoneNumber;
+
+    @DatabaseField
     private String company;
+
+    @DatabaseField
     private String position;
+
+    @DatabaseField
     private String notes;
 
-    public Contact() {};
+    public Contact() { }
 
-    public Contact(long id, long photoId) {
+    public Contact(long id, Photo photo) {
         this.id = id;
-        this.photoId = photoId;
+        this.photo = photo;
     }
 
     public long getId() { return this.id; }
 
     public void setId(long id) { this.id = id; }
 
-    public long getPhotoId() {
-        return photoId;
+    public Photo getPhoto() {
+        return photo;
     }
 
-    public void setPhotoId(long photoId) {
-        this.photoId = photoId;
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
     }
 
     public String getName() {

@@ -46,8 +46,6 @@ public abstract class BaseActivity extends Activity {
     protected Photo photo;
     protected Contact contact;
 
-    String photoFilePath;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

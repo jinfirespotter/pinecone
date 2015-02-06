@@ -1,8 +1,8 @@
 package com.firespotter.jinwroh.pinecone.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,12 +17,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.firespotter.jinwroh.pinecone.Database.Contact;
-import com.firespotter.jinwroh.pinecone.Database.ContactDataSource;
+import com.firespotter.jinwroh.pinecone.Database.DatabaseHelper;
 import com.firespotter.jinwroh.pinecone.Database.Photo;
-import com.firespotter.jinwroh.pinecone.Database.PhotoDataSource;
 import com.firespotter.jinwroh.pinecone.Module.ImageReader;
 import com.firespotter.jinwroh.pinecone.Module.TextExtractor;
 import com.firespotter.jinwroh.pinecone.R;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,8 +33,7 @@ import java.sql.SQLException;
 
 public class EditActivity extends BaseActivity {
 
-    private PhotoDataSource photoDataSource;
-    private ContactDataSource contactDataSource;
+    private DatabaseHelper mDatabaseHelper;
 
     private Photo photo;
     private Contact contact;
@@ -49,9 +50,6 @@ public class EditActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-
-        photoDataSource = new PhotoDataSource(this);
-        contactDataSource = new ContactDataSource(this);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -200,12 +198,12 @@ public class EditActivity extends BaseActivity {
 
     public void save() {
         try {
-            photoDataSource.open();
-            contactDataSource.open();
+            Dao<Photo, Integer> photoDao = getHelper().getDao(Photo.class);
+            Dao<Contact, Integer> contactDao = getHelper().getDao(Contact.class);
 
-            long photoId = photoDataSource.updateOrInsert(photo);
+            photoDao.createOrUpdate(photo);
 
-            contact.setPhotoId(photoId);
+            contact.setPhoto(photo);
             contact.setName(editName.getText().toString());
             contact.setEmail(editEmail.getText().toString());
             contact.setPhoneNumber(editPhone.getText().toString());
@@ -213,10 +211,7 @@ public class EditActivity extends BaseActivity {
             contact.setPosition(editPosition.getText().toString());
             contact.setNotes(editNotes.getText().toString());
 
-            contactDataSource.updateOrInsert(contact);
-
-            photoDataSource.close();
-            contactDataSource.close();
+            contactDao.createOrUpdate(contact);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -238,14 +233,11 @@ public class EditActivity extends BaseActivity {
 
     public void delete() {
         try {
-            photoDataSource.open();
-            contactDataSource.open();
+            Dao<Photo, Integer> photoDao = getHelper().getDao(Photo.class);
+            Dao<Contact, Integer> contactDao = getHelper().getDao(Contact.class);
 
-            photoDataSource.deletePhoto(photo);
-            contactDataSource.deleteContact(contact);
-
-            photoDataSource.close();
-            contactDataSource.close();
+            photoDao.delete(photo);
+            contactDao.delete(contact);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -289,5 +281,13 @@ public class EditActivity extends BaseActivity {
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "No Email Client Installed!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    private DatabaseHelper getHelper() {
+        if (mDatabaseHelper == null) {
+            mDatabaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+        }
+        return mDatabaseHelper;
     }
 }

@@ -14,10 +14,11 @@ import android.widget.ListView;
 import com.firespotter.jinwroh.pinecone.Adapter.HomeListAdapter;
 import com.firespotter.jinwroh.pinecone.Adapter.HomeListItem;
 import com.firespotter.jinwroh.pinecone.Database.Contact;
-import com.firespotter.jinwroh.pinecone.Database.ContactDataSource;
+import com.firespotter.jinwroh.pinecone.Database.DatabaseHelper;
 import com.firespotter.jinwroh.pinecone.Database.Photo;
-import com.firespotter.jinwroh.pinecone.Database.PhotoDataSource;
 import com.firespotter.jinwroh.pinecone.R;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +31,8 @@ import java.util.List;
 
 
 public class HomeActivity extends BaseDrawerActivity {
+
+    private DatabaseHelper mDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,6 @@ public class HomeActivity extends BaseDrawerActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
@@ -81,18 +83,20 @@ public class HomeActivity extends BaseDrawerActivity {
 
         ListView homeList = (ListView) findViewById(R.id.frame_container);
 
-        PhotoDataSource photoDataSource = new PhotoDataSource(this);
-        ContactDataSource contactDataSource = new ContactDataSource(this);
+        List<Photo> photoList = null;
+        List<Contact> contactList = null;
 
         try {
-            photoDataSource.open();
-            contactDataSource.open();
+            Dao<Photo, Integer> photoDao = getHelper().getDao(Photo.class);
+            Dao<Contact, Integer> contactDao = getHelper().getDao(Contact.class);
+
+            photoList = photoDao.queryForAll();
+            contactList = contactDao.queryForAll();
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        List<Photo> photoList = photoDataSource.getAllPhotos();
-        List<Contact> contactList = contactDataSource.getAllContacts();
 
         final List<HomeListItem> homeListItemList = new ArrayList<HomeListItem>();
 
@@ -100,7 +104,7 @@ public class HomeActivity extends BaseDrawerActivity {
         for (Photo photo : photoList) {
             long photoId = photo.getId();
             for (int i = 0; i < contactList.size(); i++) {
-                if (contactList.get(i).getPhotoId() == photoId) {
+                if (contactList.get(i).getPhoto().getId() == photoId) {
                     HomeListItem homeListItem = new HomeListItem(photo, contactList.get(i));
                     homeListItemList.add(homeListItem);
                 }
@@ -123,9 +127,6 @@ public class HomeActivity extends BaseDrawerActivity {
                 startActivity(intent);
             }
         });
-
-        photoDataSource.close();
-        contactDataSource.close();
     }
 
 
@@ -158,20 +159,17 @@ public class HomeActivity extends BaseDrawerActivity {
                    out.close();
 
                    Photo photo = new Photo(destination.getAbsolutePath());
-                   PhotoDataSource photoDataSource = new PhotoDataSource(this);
-                   photoDataSource.open();
 
-                   long photoId = photoDataSource.updateOrInsert(photo);
+                   Dao<Photo, Integer> photoDao = getHelper().getDao(Photo.class);
+                   Dao<Contact, Integer> contactDao = getHelper().getDao(Contact.class);
+
+                   photoDao.createOrUpdate(photo);
 
                    Contact contact = new Contact();
-                   contact.setPhotoId(photoId);
+                   contact.setPhoto(photo);
+                   contact.setName("Unnamed");
 
-                   ContactDataSource contactDataSource = new ContactDataSource(this);
-                   contactDataSource.open();
-                   contactDataSource.updateOrInsert(contact);
-
-                   photoDataSource.close();
-                   contactDataSource.close();
+                   contactDao.createOrUpdate(contact);
                }
            }
         } catch (IOException e) {
@@ -179,5 +177,13 @@ public class HomeActivity extends BaseDrawerActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private DatabaseHelper getHelper() {
+        if (mDatabaseHelper == null) {
+            mDatabaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+        }
+        return mDatabaseHelper;
     }
 }
