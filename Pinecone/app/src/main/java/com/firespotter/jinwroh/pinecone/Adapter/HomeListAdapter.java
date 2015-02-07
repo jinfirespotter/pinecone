@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class HomeListAdapter extends BaseAdapter {
     private Context context;
     private List<HomeListItem> navItems;
     private List<HomeListItem> navItemsCopy;
+    private Bitmap defaultThumbnail;
 
     private static final int THUMBNAIL_WIDTH = 120;
     private static final int THUMBNAIL_HEIGHT = 80;
@@ -38,6 +40,8 @@ public class HomeListAdapter extends BaseAdapter {
         this.navItems = navItems;
         navItemsCopy = new ArrayList<HomeListItem>();
         navItemsCopy.addAll(navItems);
+        defaultThumbnail = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.ic_launcher);
     }
 
 
@@ -76,36 +80,61 @@ public class HomeListAdapter extends BaseAdapter {
             homeListItemViewHolder.company = (TextView) convertView.findViewById(R.id.company);
 
             convertView.setTag(homeListItemViewHolder);
+
+            // Must set these two values to false to stop the view from interfering with
+            // onItemClickListener for Adapter view. (onItemClickListener won't work
+            // if these are not set to false.
+            convertView.setFocusable(false);
+            convertView.setClickable(false);
+
         } else {
             homeListItemViewHolder = (HomeListItemViewHolder) convertView.getTag();
         }
 
-        // Must set these two values to false to stop the view from interfering with
-        // onItemClickListener for Adapter view. (onItemClickListener won't work
-        // if these are not set to false.
-        convertView.setFocusable(false);
-        convertView.setClickable(false);
+        homeListItemViewHolder.thumbnail.setImageBitmap(defaultThumbnail);
+        homeListItemViewHolder.name.setText(navItems.get(position).getContact().getName());
+        homeListItemViewHolder.title.setText(navItems.get(position).getContact().getPosition());
+        homeListItemViewHolder.company.setText(navItems.get(position).getContact().getCompany());
+        homeListItemViewHolder.position = position;
 
-        Photo photo = navItems.get(position).getPhoto();
-
-        File file = new File(photo.getFilepath());
-        try {
-            Bitmap thumbnail  = BitmapFactory.decodeStream(new FileInputStream(file));
-
-            ThumbnailUtils thumbnailUtils = new ThumbnailUtils();
-
-            homeListItemViewHolder.thumbnail.setImageBitmap(thumbnailUtils.extractThumbnail(
-                    thumbnail,
-                    THUMBNAIL_WIDTH,
-                    THUMBNAIL_HEIGHT));
-            homeListItemViewHolder.name.setText(navItems.get(position).getContact().getName());
-            homeListItemViewHolder.title.setText(navItems.get(position).getContact().getPosition());
-            homeListItemViewHolder.company.setText(navItems.get(position).getContact().getCompany());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        new ThumbnailLoadOperation().execute(homeListItemViewHolder);
 
         return convertView;
+    }
+
+
+    private class ThumbnailLoadOperation extends AsyncTask<HomeListItemViewHolder, Void, Bitmap> {
+        private HomeListItemViewHolder holder;
+        private int savedPosition;
+
+        @Override
+        protected Bitmap doInBackground(HomeListItemViewHolder... params) {
+            holder = params[0];
+            savedPosition = holder.position;
+            Photo photo = navItems.get(holder.position).getPhoto();
+
+            File file = new File(photo.getFilepath());
+            try {
+                Bitmap thumbnail  = BitmapFactory.decodeStream(new FileInputStream(file));
+                ThumbnailUtils thumbnailUtils = new ThumbnailUtils();
+                return thumbnailUtils.extractThumbnail(
+                        thumbnail,
+                        THUMBNAIL_WIDTH,
+                        THUMBNAIL_HEIGHT);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            if (holder.position == savedPosition) {
+                holder.thumbnail.setImageBitmap(result);
+            }
+        }
     }
 
 
