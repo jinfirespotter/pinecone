@@ -1,5 +1,6 @@
 package com.firespotter.jinwroh.pinecone.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -150,17 +151,23 @@ public class EditActivity extends BaseActivity {
 
 
     public void rescanPicture() {
-        new ImageScanOperation().execute(photo);
+        new ImageScanOperation(this).execute(photo);
     }
 
 
     private class ImageScanOperation extends AsyncTask<Photo, String, String> {
 
+        private Context context;
+
+        public ImageScanOperation(Context context) {
+            this.context = context;
+        }
+
         protected void onPreExecute() {
             CharSequence text = "Scanning in Progress!";
             int duration = Toast.LENGTH_SHORT;
 
-            Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+            Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         }
 
@@ -169,7 +176,7 @@ public class EditActivity extends BaseActivity {
             String text = "";
             try {
                 image = BitmapFactory.decodeStream(new FileInputStream(photo[0].getFilepath()));
-                ImageReader imageReader = new ImageReader(getApplicationContext(), image);
+                ImageReader imageReader = new ImageReader(context, image);
                 text = imageReader.convertImageToText();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -190,7 +197,7 @@ public class EditActivity extends BaseActivity {
             CharSequence toastText = "Scanning Complete!";
             int duration = Toast.LENGTH_SHORT;
 
-            Toast toast = Toast.makeText(getApplicationContext(), toastText, duration);
+            Toast toast = Toast.makeText(context, toastText, duration);
             toast.show();
         }
     }
