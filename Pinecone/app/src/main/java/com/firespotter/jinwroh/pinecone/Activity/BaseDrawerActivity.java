@@ -59,7 +59,7 @@ public abstract class BaseDrawerActivity extends BaseActivity {
 
         navMenuIcons.recycle();
 
-        adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
+        adapter = new NavDrawerListAdapter(this, navDrawerItems);
         mDrawerList.setAdapter(adapter);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);

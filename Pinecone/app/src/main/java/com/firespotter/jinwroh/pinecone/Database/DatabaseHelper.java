@@ -47,13 +47,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
                           int oldVersion, int newVersion) {
-        try {
-            for (Class<?> clazz : tables) {
-                TableUtils.dropTable(connectionSource, clazz, true);
-                onCreate(db, connectionSource);
+        if (oldVersion < DATABASE_VERSION) {
+            try {
+                for (Class<?> clazz : tables) {
+                    TableUtils.dropTable(connectionSource, clazz, true);
+                    onCreate(db, connectionSource);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 

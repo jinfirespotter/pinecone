@@ -32,20 +32,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQueryTextListener {
+public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQueryTextListener,
+        AdapterView.OnItemClickListener {
 
     private DatabaseHelper mDatabaseHelper;
     private HomeListAdapter mHomeAdapter;
     private SearchView mSearchView;
     private ListView mHomeList;
+    private List<HomeListItem> mHomeListItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        mHomeListItemList = fetchItemList();
         mHomeList = (ListView) findViewById(R.id.frame_container);
-        mHomeAdapter = new HomeListAdapter(getApplicationContext(), fetchItemList());
+        mHomeAdapter = new HomeListAdapter(this, mHomeListItemList);
+        mHomeList.setAdapter(mHomeAdapter);
+        mHomeList.setOnItemClickListener(this);
 
         // For testing purposes
         //initializeSamples();
@@ -57,7 +62,8 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
     @Override
     protected void onStart() {
         super.onStart();
-        initializeListView();
+        mHomeListItemList = fetchItemList();
+        mHomeAdapter.setItemList(mHomeListItemList);
         if (mSearchView != null) {
             onQueryTextChange(mSearchView.getQuery().toString());
         }
@@ -104,25 +110,16 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
     }
 
 
-    public void initializeListView() {
-        final List<HomeListItem> homeListItemList = fetchItemList();
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this, EditActivity.class);
 
-        mHomeAdapter.setItemList(homeListItemList);
-        mHomeList.setAdapter(mHomeAdapter);
+        Photo photo = mHomeListItemList.get(position).getContact().getPhoto();
+        Contact contact = mHomeListItemList.get(position).getContact();
 
-        mHomeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), EditActivity.class);
+        intent.putExtra(BaseActivity.PHOTO_ACTIVITY_PHOTO, photo);
+        intent.putExtra(BaseActivity.PHOTO_ACTIVITY_CONTACT, contact);
 
-                Photo photo = homeListItemList.get(position).getContact().getPhoto();
-                Contact contact = homeListItemList.get(position).getContact();
-
-                intent.putExtra(BaseActivity.PHOTO_ACTIVITY_PHOTO, photo);
-                intent.putExtra(BaseActivity.PHOTO_ACTIVITY_CONTACT, contact);
-
-                startActivity(intent);
-            }
-        });
+        startActivity(intent);
     }
 
 
@@ -151,7 +148,7 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
         String[] sampleFiles = {"card1.jpg", "card2.png", "card3.jpg"};
 
         try {
-            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            ContextWrapper cw = new ContextWrapper(this);
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
 
            for (String s : sampleFiles) {

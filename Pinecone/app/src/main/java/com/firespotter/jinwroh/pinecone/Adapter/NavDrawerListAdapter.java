@@ -62,8 +62,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
             navDrawerListItemViewHolder = (NavDrawerListItemViewHolder) convertView.getTag();
         }
 
-        navDrawerListItemViewHolder.imgIcon.setImageResource(getItem(position).getIcon());
-        navDrawerListItemViewHolder.txtTitle.setText(getItem(position).getTitle());
+        navDrawerListItemViewHolder.setValues(getItem(position));
 
         return convertView;
     }
@@ -72,6 +71,10 @@ public class NavDrawerListAdapter extends BaseAdapter {
     static class NavDrawerListItemViewHolder {
         ImageView imgIcon;
         TextView txtTitle;
-        int position;
+
+        public void setValues(NavDrawerItem item) {
+            imgIcon.setImageResource(item.getIcon());
+            txtTitle.setText(item.getTitle());
+        }
     }
 }

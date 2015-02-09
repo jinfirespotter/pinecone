@@ -114,31 +114,24 @@ public class EditActivity extends BaseActivity {
             case R.id.action_save:
                 save();
                 break;
-
             case R.id.action_rescan_picture:
                 rescanPicture();
                 break;
-
             case R.id.action_add_to_contacts:
                 addToContacts();
                 break;
-
             case R.id.action_save_to_gallery:
                 savePictureToGallery(photo.getFilepath());
                 break;
-
             case R.id.action_retake_picture:
                 super.retakePicture(photo, contact);
                 break;
-
             case R.id.action_send_email:
                 sendEmail();
                 break;
-
             case R.id.action_delete:
                 delete();
                 break;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -233,7 +226,7 @@ public class EditActivity extends BaseActivity {
         CharSequence text = "Saved Successfully!";
         int duration = Toast.LENGTH_SHORT;
 
-        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+        Toast toast = Toast.makeText(this, text, duration);
         toast.show();
     }
 

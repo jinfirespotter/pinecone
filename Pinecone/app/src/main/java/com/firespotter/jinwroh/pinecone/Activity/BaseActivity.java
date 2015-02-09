@@ -195,7 +195,7 @@ public abstract class BaseActivity extends Activity {
 
         File source = new File(path);
 
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        ContextWrapper cw = new ContextWrapper(this);
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         File destination = new File(directory, source.getName());
 

@@ -13,19 +13,19 @@ public class NavDrawerItem {
         this.icon = icon;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
-    public int getIcon(){
+    public int getIcon() {
         return icon;
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setIcon(int icon){
+    public void setIcon(int icon) {
         this.icon = icon;
     }
 }

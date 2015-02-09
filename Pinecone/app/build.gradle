@@ -25,4 +25,5 @@ dependencies {
     compile project(':libraries:tess-two')
     compile files('libs/ormlite-android-4.43.jar')
     compile files('libs/ormlite-core-4.43.jar')
+    compile files('libs/eventbus-2.4.0.jar')
 }
