@@ -15,7 +15,7 @@ public class Contact implements Serializable{
     @DatabaseField(index = true, unique = true, generatedId = true)
     private long id;
 
-    @DatabaseField (foreign = true)
+    @DatabaseField (foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Photo photo;
 
     @DatabaseField
@@ -36,18 +36,18 @@ public class Contact implements Serializable{
     @DatabaseField
     private String notes;
 
-    private String infoString;
 
-    public Contact() { }
-
-    public Contact(long id, Photo photo) {
-        this.id = id;
-        this.photo = photo;
+    public Contact() {
+        //Needed by ORMLite
     }
 
-    public long getId() { return this.id; }
+    public long getId() {
+        return id;
+    }
 
-    public void setId(long id) { this.id = id; }
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Photo getPhoto() {
         return photo;
@@ -97,9 +97,13 @@ public class Contact implements Serializable{
         this.position = position;
     }
 
-    public String getNotes() { return notes; }
+    public String getNotes() {
+        return notes;
+    }
 
-    public void setNotes(String notes) { this.notes = notes; }
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
     // This string is used during filtering.
     @Override

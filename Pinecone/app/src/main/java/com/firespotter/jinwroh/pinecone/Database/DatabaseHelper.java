@@ -2,7 +2,6 @@ package com.firespotter.jinwroh.pinecone.Database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
@@ -16,11 +15,14 @@ import java.util.ArrayList;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
+    public static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "pinecone_database.db";
+
     private Context context;
     private ArrayList<Class<?>> tables;
 
     public DatabaseHelper(Context context) {
-        super(context, DatabaseContract.DATABASE_NAME, null, DatabaseContract.DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         this.context = context;
 

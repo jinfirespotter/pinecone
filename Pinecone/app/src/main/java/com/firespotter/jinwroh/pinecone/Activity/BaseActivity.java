@@ -41,8 +41,6 @@ public abstract class BaseActivity extends Activity {
     public static final String JPEG_FILE_PREFIX = "IMG_";
     public static final String JPEG_FILE_SUFFIX = ".jpg";
 
-    protected Context context;
-
     protected Photo photo;
     protected Contact contact;
 
@@ -50,7 +48,6 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getApplicationContext();
     }
 
     @Override
@@ -59,8 +56,7 @@ public abstract class BaseActivity extends Activity {
 
         if (id == R.id.action_picture) {
             takeNewPicture();
-        }
-        else {
+        } else {
             return super.onOptionsItemSelected(item);
         }
         return true;
@@ -68,10 +64,7 @@ public abstract class BaseActivity extends Activity {
 
 
     public void takeNewPicture() {
-        photo = new Photo();
-        contact = new Contact();
-
-        dispatchTakePictureIntent();
+        retakePicture(new Photo(), new Contact());
     }
 
 
@@ -127,8 +120,7 @@ public abstract class BaseActivity extends Activity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
@@ -185,8 +177,7 @@ public abstract class BaseActivity extends Activity {
                     }
                 }
             }
-        }
-        else {
+        } else {
             Log.v(getString(R.string.app_name), "External storage is not mounted READ/WRITE.");
         }
 
@@ -219,8 +210,7 @@ public abstract class BaseActivity extends Activity {
             }
             in.close();
             out.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

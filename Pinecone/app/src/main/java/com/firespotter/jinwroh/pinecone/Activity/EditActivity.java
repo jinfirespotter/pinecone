@@ -110,6 +110,7 @@ public class EditActivity extends BaseActivity {
         int id = item.getItemId();
 
         switch (id) {
+            case android.R.id.home:
             case R.id.action_save:
                 save();
                 break;
@@ -138,14 +139,20 @@ public class EditActivity extends BaseActivity {
                 delete();
                 break;
 
-            case android.R.id.home:
-                save();
-                super.onOptionsItemSelected(item);
-
             default:
                 return super.onOptionsItemSelected(item);
         }
-        return true;
+        return false;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDatabaseHelper != null) {
+            OpenHelperManager.releaseHelper();
+            mDatabaseHelper = null;
+        }
     }
 
 
@@ -160,7 +167,7 @@ public class EditActivity extends BaseActivity {
             CharSequence text = "Scanning in Progress!";
             int duration = Toast.LENGTH_SHORT;
 
-            Toast toast = Toast.makeText(context, text, duration);
+            Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
         }
 
@@ -169,7 +176,7 @@ public class EditActivity extends BaseActivity {
             String text = "";
             try {
                 image = BitmapFactory.decodeStream(new FileInputStream(photo[0].getFilepath()));
-                ImageReader imageReader = new ImageReader(context, image);
+                ImageReader imageReader = new ImageReader(getApplicationContext(), image);
                 text = imageReader.convertImageToText();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -190,7 +197,7 @@ public class EditActivity extends BaseActivity {
             CharSequence toastText = "Scanning Complete!";
             int duration = Toast.LENGTH_SHORT;
 
-            Toast toast = Toast.makeText(context, toastText, duration);
+            Toast toast = Toast.makeText(getApplicationContext(), toastText, duration);
             toast.show();
         }
     }
@@ -226,7 +233,7 @@ public class EditActivity extends BaseActivity {
         CharSequence text = "Saved Successfully!";
         int duration = Toast.LENGTH_SHORT;
 
-        Toast toast = Toast.makeText(context, text, duration);
+        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
         toast.show();
     }
 

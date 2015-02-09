@@ -8,16 +8,10 @@ import com.firespotter.jinwroh.pinecone.Database.Photo;
  */
 public class HomeListItem {
 
-    private Photo photo;
     private Contact contact;
 
-    public HomeListItem(Photo photo, Contact contact) {
-        this.photo = photo;
+    public HomeListItem(Contact contact) {
         this.contact = contact;
-    }
-
-    public Photo getPhoto() {
-        return photo;
     }
 
     public Contact getContact() {

@@ -40,7 +40,7 @@ public abstract class BaseDrawerActivity extends BaseActivity {
     private NavDrawerListAdapter adapter;
 
 
-    public void initialiseDrawer() {
+    public void initializeDrawer() {
         mTitle = mDrawerTitle = getTitle();
 
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);

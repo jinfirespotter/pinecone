@@ -37,9 +37,7 @@ public class HomeListAdapter extends BaseAdapter {
 
     public HomeListAdapter(Context context, List<HomeListItem> navItems) {
         this.context = context;
-        this.navItems = navItems;
-        navItemsCopy = new ArrayList<HomeListItem>();
-        navItemsCopy.addAll(navItems);
+        setItemList(navItems);
         defaultThumbnail = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.ic_launcher);
     }
@@ -52,7 +50,7 @@ public class HomeListAdapter extends BaseAdapter {
 
 
     @Override
-    public Object getItem(int position) {
+    public HomeListItem getItem(int position) {
         return navItems.get(position);
     }
 
@@ -111,7 +109,7 @@ public class HomeListAdapter extends BaseAdapter {
         protected Bitmap doInBackground(HomeListItemViewHolder... params) {
             holder = params[0];
             savedPosition = holder.position;
-            Photo photo = navItems.get(holder.position).getPhoto();
+            Photo photo = navItems.get(holder.position).getContact().getPhoto();
 
             File file = new File(photo.getFilepath());
             try {
@@ -135,6 +133,13 @@ public class HomeListAdapter extends BaseAdapter {
                 holder.thumbnail.setImageBitmap(result);
             }
         }
+    }
+
+
+    public void setItemList(List<HomeListItem> homeListItemList) {
+        navItems = homeListItemList;
+        navItemsCopy = new ArrayList<HomeListItem>();
+        navItemsCopy.addAll(navItems);
     }
 
 

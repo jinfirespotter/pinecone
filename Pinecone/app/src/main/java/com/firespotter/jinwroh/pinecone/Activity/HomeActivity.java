@@ -36,19 +36,21 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
 
     private DatabaseHelper mDatabaseHelper;
     private HomeListAdapter mHomeAdapter;
-
     private SearchView mSearchView;
-
+    private ListView mHomeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // For testing purposes
-        initializeSamples();
+        mHomeList = (ListView) findViewById(R.id.frame_container);
+        mHomeAdapter = new HomeListAdapter(getApplicationContext(), fetchItemList());
 
-        super.initialiseDrawer();
+        // For testing purposes
+        //initializeSamples();
+
+        super.initializeDrawer();
     }
 
 
@@ -103,45 +105,16 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
 
 
     public void initializeListView() {
+        final List<HomeListItem> homeListItemList = fetchItemList();
 
-        ListView homeList = (ListView) findViewById(R.id.frame_container);
+        mHomeAdapter.setItemList(homeListItemList);
+        mHomeList.setAdapter(mHomeAdapter);
 
-        List<Photo> photoList = null;
-        List<Contact> contactList = null;
-
-        try {
-            Dao<Photo, Integer> photoDao = getHelper().getDao(Photo.class);
-            Dao<Contact, Integer> contactDao = getHelper().getDao(Contact.class);
-
-            photoList = photoDao.queryForAll();
-            contactList = contactDao.queryForAll();
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        final List<HomeListItem> homeListItemList = new ArrayList<HomeListItem>();
-
-        // O(n^2)! Oh No! TODO: Optimize query
-        for (Photo photo : photoList) {
-            long photoId = photo.getId();
-            for (int i = 0; i < contactList.size(); i++) {
-                if (contactList.get(i).getPhoto().getId() == photoId) {
-                    HomeListItem homeListItem = new HomeListItem(photo, contactList.get(i));
-                    homeListItemList.add(homeListItem);
-                }
-            }
-        }
-
-        mHomeAdapter = new HomeListAdapter(context, homeListItemList);
-        homeList.setAdapter(mHomeAdapter);
-
-        homeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mHomeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(context, EditActivity.class);
+                Intent intent = new Intent(getApplicationContext(), EditActivity.class);
 
-                Photo photo = homeListItemList.get(position).getPhoto();
+                Photo photo = homeListItemList.get(position).getContact().getPhoto();
                 Contact contact = homeListItemList.get(position).getContact();
 
                 intent.putExtra(BaseActivity.PHOTO_ACTIVITY_PHOTO, photo);
@@ -153,12 +126,32 @@ public class HomeActivity extends BaseDrawerActivity implements SearchView.OnQue
     }
 
 
-    public void initializeSamples() {
+    private List<HomeListItem> fetchItemList() {
+        List<HomeListItem> homeListItemList = new ArrayList<HomeListItem>();
+
+        List<Contact> contactList = null;
+        try {
+            Dao<Contact, Integer> contactDao = getHelper().getDao(Contact.class);
+            contactList = contactDao.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (Contact contact : contactList) {
+            HomeListItem homeListItem = new HomeListItem(contact);
+            homeListItemList.add(homeListItem);
+        }
+
+        return homeListItemList;
+    }
+
+
+    private void initializeSamples() {
 
         String[] sampleFiles = {"card1.jpg", "card2.png", "card3.jpg"};
 
         try {
-            ContextWrapper cw = new ContextWrapper(context);
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
 
            for (String s : sampleFiles) {

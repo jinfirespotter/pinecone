@@ -18,7 +18,7 @@ public class AboutActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        super.initialiseDrawer();
+        super.initializeDrawer();
     }
 
     @Override
@@ -31,5 +31,4 @@ public class AboutActivity extends BaseDrawerActivity {
     public boolean onOptionsItemSelected (MenuItem item){
         return super.onOptionsItemSelected(item);
     }
-
 }
