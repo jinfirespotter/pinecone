@@ -18,7 +18,9 @@ public class Photo implements Serializable{
     @DatabaseField
     private String filepath;
 
-    public Photo() { }
+    public Photo() {
+        // Needed by ORMLite
+    }
 
     public Photo(String filepath) {
        this.filepath = filepath;

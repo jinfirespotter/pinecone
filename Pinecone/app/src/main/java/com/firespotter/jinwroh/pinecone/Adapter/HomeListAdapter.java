@@ -31,6 +31,7 @@ public class HomeListAdapter extends BaseAdapter {
     private List<HomeListItem> navItems;
     private List<HomeListItem> navItemsCopy;
     private Bitmap defaultThumbnail;
+    private LayoutInflater mInflater;
 
     private static final int THUMBNAIL_WIDTH = 120;
     private static final int THUMBNAIL_HEIGHT = 80;
@@ -38,6 +39,7 @@ public class HomeListAdapter extends BaseAdapter {
     public HomeListAdapter(Context context, List<HomeListItem> navItems) {
         this.context = context;
         setItemList(navItems);
+        mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         defaultThumbnail = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.ic_launcher);
     }
@@ -67,8 +69,6 @@ public class HomeListAdapter extends BaseAdapter {
         HomeListItemViewHolder homeListItemViewHolder;
 
         if (convertView == null) {
-            LayoutInflater mInflater =
-                    (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.home_list_item, null);
 
             homeListItemViewHolder = new HomeListItemViewHolder();
@@ -87,15 +87,15 @@ public class HomeListAdapter extends BaseAdapter {
 
         } else {
             homeListItemViewHolder = (HomeListItemViewHolder) convertView.getTag();
+
         }
 
         homeListItemViewHolder.thumbnail.setImageBitmap(defaultThumbnail);
-        homeListItemViewHolder.name.setText(navItems.get(position).getContact().getName());
-        homeListItemViewHolder.title.setText(navItems.get(position).getContact().getPosition());
-        homeListItemViewHolder.company.setText(navItems.get(position).getContact().getCompany());
-        homeListItemViewHolder.position = position;
-
         new ThumbnailLoadOperation().execute(homeListItemViewHolder);
+        homeListItemViewHolder.name.setText(getItem(position).getContact().getName());
+        homeListItemViewHolder.title.setText(getItem(position).getContact().getPosition());
+        homeListItemViewHolder.company.setText(getItem(position).getContact().getCompany());
+        homeListItemViewHolder.position = position;
 
         return convertView;
     }
